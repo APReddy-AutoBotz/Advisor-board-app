@@ -1,0 +1,679 @@
+/**
+ * Complete User Workflow Integration Test
+ * 
+ * Tests the entire user journey from question submission to response display
+ * Validates persona consistency and response quality across all advisor types
+ * Verifies integration of all persona-llm components with consultation interface
+ * 
+ * Requirements: FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7
+ */
+
+import React from 'react';
+import { screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render } from '../../utils/testUtils';
+import userEvent from '@testing-library/user-event';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import ConsultationInterface from '../../components/consultation/ConsultationInterface';
+import { generateAdvisorResponses, getQuestionInsights } from '../../services/intelligentResponseService';
+import { demoModeService } from '../../services/demoModeService';
+import { performanceMonitoringService } from '../../services/performanceMonitoringService';
+import type { Domain, Advisor } from '../../types/domain';
+import type { ConsultationSession } from '../../types/session';
+
+// Mock services
+vi.mock('../../services/intelligentResponseService');
+vi.mock('../../services/demoModeService');
+vi.mock('../../services/performanceMonitoringService');
+vi.mock('../../services/exportService', () => ({
+  ExportService: {
+    exportToPDF: vi.fn().mockResolvedValue(undefined)
+  }
+}));
+
+const mockGenerateAdvisorResponses = vi.mocked(generateAdvisorResponses);
+const mockGetQuestionInsights = vi.mocked(getQuestionInsights);
+const mockDemoModeService = vi.mocked(demoModeService);
+const mockPerformanceMonitoringService = vi.mocked(performanceMonitoringService);
+
+// Test data
+const mockDomain: Domain = {
+  id: 'productboard',
+  name: 'ProductBoard',
+  description: 'Product strategy and development advisory',
+  color: 'blue',
+  icon: '🚀',
+  advisors: []
+};
+
+const mockAdvisors: Advisor[] = [
+  {
+    id: 'cpo-001',
+    name: 'Sarah Chen',
+    expertise: 'Chief Product Officer',
+    background: 'Former VP of Product at leading tech companies',
+    domain: 'productboard',
+    isSelected: true,
+    credentials: 'MBA, 15+ years product leadership',
+    specialties: ['Product Strategy', 'Market Analysis', 'Team Leadership'],
+    avatar: '/images/advisors/sarah-chen.jpg'
+  },
+  {
+    id: 'pm-001',
+    name: 'Marcus Rodriguez',
+    expertise: 'Senior Product Manager',
+    background: 'Expert in agile development and user research',
+    domain: 'productboard',
+    isSelected: true,
+    credentials: 'MS Computer Science, Certified Scrum Master',
+    specialties: ['User Research', 'Agile Development', 'Data Analytics'],
+    avatar: '/images/advisors/marcus-rodriguez.jpg'
+  }
+];
+
+const mockQuestionInsights = {
+  type: 'product_strategy',
+  keywords: ['market', 'competition', 'strategy'],
+  domain: 'productboard',
+  confidence: 0.85,
+  sentiment: 'neutral',
+  complexity: 'medium',
+  urgency: 'normal',
+  frameworks: ['Jobs-to-be-Done', 'North Star Framework', 'OKRs']
+};
+
+const mockAdvisorResponses = [
+  {
+    advisorId: 'cpo-001',
+    content: 'As a Chief Product Officer, I recommend focusing on market differentiation through innovative features that address unmet customer needs. Consider implementing a Jobs-to-be-Done framework to identify these opportunities.',
+    timestamp: new Date(),
+    persona: {
+      name: 'Sarah Chen',
+      expertise: 'Chief Product Officer'
+    },
+    metadata: {
+      responseType: 'llm' as const,
+      provider: 'openai',
+      processingTime: 1200,
+      confidence: 0.9,
+      frameworks: ['Jobs-to-be-Done', 'North Star Framework']
+    }
+  },
+  {
+    advisorId: 'pm-001',
+    content: 'From a product management perspective, I suggest conducting user interviews to validate your assumptions. Use data-driven insights to prioritize features that will have the highest impact on user satisfaction and business metrics.',
+    timestamp: new Date(),
+    persona: {
+      name: 'Marcus Rodriguez',
+      expertise: 'Senior Product Manager'
+    },
+    metadata: {
+      responseType: 'static' as const,
+      processingTime: 800,
+      confidence: 0.85,
+      frameworks: ['User Research', 'Data Analytics']
+    }
+  }
+];
+
+// Using render from testUtils which already includes theme provider
+
+describe('Complete User Workflow Integration', () => {
+  const user = userEvent.setup();
+  let mockOnBack: ReturnType<typeof vi.fn>;
+  let mockOnComplete: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    mockOnBack = vi.fn();
+    mockOnComplete = vi.fn();
+    
+    // Reset all mocks
+    vi.clearAllMocks();
+    
+    // Setup default mock implementations
+    mockGetQuestionInsights.mockResolvedValue(mockQuestionInsights);
+    mockGenerateAdvisorResponses.mockResolvedValue(mockAdvisorResponses);
+    mockDemoModeService.isDemoModeActive.mockReturnValue(false);
+    mockPerformanceMonitoringService.recordResponseMetrics.mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('Initial Interface Rendering', () => {
+    it('should render consultation interface with selected advisors', () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      // Verify domain header
+      expect(screen.getByText('ProductBoard Advisory Session')).toBeInTheDocument();
+      expect(screen.getByText('Consulting with 2 experts')).toBeInTheDocument();
+
+      // Verify advisor display
+      expect(screen.getByText('Your Advisory Board')).toBeInTheDocument();
+      expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+      expect(screen.getByText('Chief Product Officer')).toBeInTheDocument();
+      expect(screen.getByText('Marcus Rodriguez')).toBeInTheDocument();
+      expect(screen.getByText('Senior Product Manager')).toBeInTheDocument();
+
+      // Verify prompt input is visible
+      expect(screen.getByLabelText('Your Question')).toBeInTheDocument();
+    });
+
+    it('should display back button when onBack is provided', () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const backButton = screen.getByRole('button', { name: /back to advisors/i });
+      expect(backButton).toBeInTheDocument();
+    });
+  });
+
+  describe('Question Submission and Analysis', () => {
+    it('should analyze question and display insights', async () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      // Submit question
+      await user.type(questionInput, 'How should I approach market competition analysis?');
+      await user.click(submitButton);
+
+      // Wait for question analysis
+      await waitFor(() => {
+        expect(mockGetQuestionInsights).toHaveBeenCalledWith(
+          'How should I approach market competition analysis?'
+        );
+      });
+
+      // Verify question display
+      await waitFor(() => {
+        expect(screen.getByText('Your Question')).toBeInTheDocument();
+        expect(screen.getByText('"How should I approach market competition analysis?"')).toBeInTheDocument();
+      });
+
+      // Verify question analysis display
+      await waitFor(() => {
+        expect(screen.getByText('Question Analysis')).toBeInTheDocument();
+        expect(screen.getByText('Type: product_strategy')).toBeInTheDocument();
+        expect(screen.getByText('Domain: productboard')).toBeInTheDocument();
+        expect(screen.getByText('Confidence: 85%')).toBeInTheDocument();
+      });
+    });
+
+    it('should show loading state during response generation', async () => {
+      // Make the response generation take longer
+      mockGenerateAdvisorResponses.mockImplementation(() => 
+        new Promise(resolve => setTimeout(() => resolve(mockAdvisorResponses), 1000))
+      );
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Test question');
+      await user.click(submitButton);
+
+      // Verify loading state
+      await waitFor(() => {
+        expect(screen.getByText('🧠 Generating Intelligent Responses...')).toBeInTheDocument();
+        expect(screen.getByText(/Our AI advisors are analyzing your question/)).toBeInTheDocument();
+      });
+
+      // Wait for responses to complete
+      await waitFor(() => {
+        expect(screen.getByText('🎯 Expert Advisory Responses')).toBeInTheDocument();
+      }, { timeout: 2000 });
+    });
+  });
+
+  describe('Response Generation and Display', () => {
+    it('should generate and display advisor responses with persona consistency', async () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'How should I approach market competition analysis?');
+      await user.click(submitButton);
+
+      // Wait for responses
+      await waitFor(() => {
+        expect(mockGenerateAdvisorResponses).toHaveBeenCalledWith(
+          'How should I approach market competition analysis?',
+          expect.arrayContaining([
+            expect.objectContaining({
+              id: 'cpo-001',
+              name: 'Sarah Chen',
+              role: 'Chief Product Officer'
+            }),
+            expect.objectContaining({
+              id: 'pm-001',
+              name: 'Marcus Rodriguez',
+              role: 'Senior Product Manager'
+            })
+          ]),
+          'productboard'
+        );
+      });
+
+      // Verify response display
+      await waitFor(() => {
+        expect(screen.getByText('🎯 Expert Advisory Responses')).toBeInTheDocument();
+        
+        // Check CPO response
+        expect(screen.getByText(/As a Chief Product Officer, I recommend focusing on market differentiation/)).toBeInTheDocument();
+        
+        // Check PM response
+        expect(screen.getByText(/From a product management perspective, I suggest conducting user interviews/)).toBeInTheDocument();
+      });
+
+      // Verify advisor names are displayed
+      expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+      expect(screen.getByText('Marcus Rodriguez')).toBeInTheDocument();
+    });
+
+    it('should handle response generation errors gracefully', async () => {
+      mockGenerateAdvisorResponses.mockRejectedValue(new Error('API Error'));
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Test question');
+      await user.click(submitButton);
+
+      // Wait for fallback responses
+      await waitFor(() => {
+        expect(screen.getByText('🎯 Expert Advisory Responses')).toBeInTheDocument();
+        
+        // Should show fallback responses
+        expect(screen.getByText(/Thank you for your question about "Test question"/)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Demo Mode Integration', () => {
+    it('should use demo mode when active', async () => {
+      mockDemoModeService.isDemoModeActive.mockReturnValue(true);
+      
+      const mockDemoResponses = [
+        {
+          advisorId: 'cpo-001',
+          content: 'Demo response from CPO with enhanced insights',
+          timestamp: new Date(),
+          persona: {
+            name: 'Sarah Chen',
+            expertise: 'Chief Product Officer'
+          },
+          metadata: {
+            responseType: 'static' as const,
+            processingTime: 500,
+            confidence: 0.95,
+            frameworks: ['Jobs-to-be-Done']
+          }
+        }
+      ];
+
+      mockGenerateAdvisorResponses.mockResolvedValue(mockDemoResponses);
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={[mockAdvisors[0]]}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Demo question');
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Demo response from CPO with enhanced insights/)).toBeInTheDocument();
+      });
+
+      // Verify demo mode was detected
+      expect(mockDemoModeService.isDemoModeActive).toHaveBeenCalled();
+    });
+  });
+
+  describe('Session Completion and Export', () => {
+    it('should complete session and export results', async () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      // Submit question and wait for responses
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Test question');
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('🎉 Intelligent Consultation Complete!')).toBeInTheDocument();
+      });
+
+      // Verify completion stats
+      expect(screen.getByText('2')).toBeInTheDocument(); // AI Experts
+      expect(screen.getByText('2')).toBeInTheDocument(); // Intelligent Responses
+      expect(screen.getByText('85%')).toBeInTheDocument(); // Relevance Score
+
+      // Test export functionality
+      const exportButton = screen.getByRole('button', { name: /download professional report/i });
+      await user.click(exportButton);
+
+      await waitFor(() => {
+        expect(mockOnComplete).toHaveBeenCalledWith(
+          expect.objectContaining({
+            domain: 'productboard',
+            selectedAdvisors: mockAdvisors,
+            prompt: 'Test question',
+            responses: mockAdvisorResponses
+          })
+        );
+      });
+    });
+
+    it('should handle export errors gracefully', async () => {
+      // Mock export service to fail
+      const { ExportService } = await import('../../services/exportService');
+      vi.mocked(ExportService.exportToPDF).mockRejectedValue(new Error('Export failed'));
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      // Submit question and wait for responses
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Test question');
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('🎉 Intelligent Consultation Complete!')).toBeInTheDocument();
+      });
+
+      // Mock document methods for fallback export
+      const mockCreateElement = vi.fn().mockReturnValue({
+        href: '',
+        download: '',
+        click: vi.fn()
+      });
+      const mockCreateObjectURL = vi.fn().mockReturnValue('blob:url');
+      const mockRevokeObjectURL = vi.fn();
+      
+      Object.defineProperty(document, 'createElement', { value: mockCreateElement });
+      Object.defineProperty(document.body, 'appendChild', { value: vi.fn() });
+      Object.defineProperty(document.body, 'removeChild', { value: vi.fn() });
+      Object.defineProperty(URL, 'createObjectURL', { value: mockCreateObjectURL });
+      Object.defineProperty(URL, 'revokeObjectURL', { value: mockRevokeObjectURL });
+
+      // Test export fallback
+      const exportButton = screen.getByRole('button', { name: /download professional report/i });
+      await user.click(exportButton);
+
+      // Should fallback to JSON export
+      await waitFor(() => {
+        expect(mockCreateElement).toHaveBeenCalledWith('a');
+      });
+    });
+  });
+
+  describe('Performance and Quality Validation', () => {
+    it('should validate response quality across all advisor types', async () => {
+      const multiDomainAdvisors: Advisor[] = [
+        ...mockAdvisors,
+        {
+          id: 'clinical-001',
+          name: 'Dr. Emily Watson',
+          expertise: 'Clinical Research Specialist',
+          background: 'Former FDA reviewer with 20+ years experience',
+          domain: 'cliniboard',
+          isSelected: true,
+          credentials: 'MD, PhD, Board Certified',
+          specialties: ['Clinical Trials', 'Regulatory Affairs', 'Drug Development']
+        }
+      ];
+
+      const multiDomainResponses = [
+        ...mockAdvisorResponses,
+        {
+          advisorId: 'clinical-001',
+          content: 'From a clinical research perspective, ensure your study design meets FDA guidelines and includes appropriate safety monitoring protocols.',
+          timestamp: new Date(),
+          persona: {
+            name: 'Dr. Emily Watson',
+            expertise: 'Clinical Research Specialist'
+          },
+          metadata: {
+            responseType: 'llm' as const,
+            provider: 'anthropic',
+            processingTime: 1500,
+            confidence: 0.92,
+            frameworks: ['ICH Guidelines', 'FDA Guidance']
+          }
+        }
+      ];
+
+      mockGenerateAdvisorResponses.mockResolvedValue(multiDomainResponses);
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={multiDomainAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'How should I validate my product concept?');
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('🎯 Expert Advisory Responses')).toBeInTheDocument();
+      });
+
+      // Verify each advisor type provides domain-specific insights
+      expect(screen.getByText(/market differentiation through innovative features/)).toBeInTheDocument();
+      expect(screen.getByText(/conducting user interviews to validate/)).toBeInTheDocument();
+      expect(screen.getByText(/clinical research perspective, ensure your study design/)).toBeInTheDocument();
+
+      // Verify all advisor names are displayed
+      expect(screen.getByText('Sarah Chen')).toBeInTheDocument();
+      expect(screen.getByText('Marcus Rodriguez')).toBeInTheDocument();
+      expect(screen.getByText('Dr. Emily Watson')).toBeInTheDocument();
+    });
+
+    it('should meet performance benchmarks', async () => {
+      const startTime = Date.now();
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Performance test question');
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('🎯 Expert Advisory Responses')).toBeInTheDocument();
+      });
+
+      const endTime = Date.now();
+      const totalTime = endTime - startTime;
+
+      // Should complete within reasonable time (allowing for test overhead)
+      expect(totalTime).toBeLessThan(5000); // 5 seconds max for test environment
+    });
+  });
+
+  describe('Error Handling and Fallbacks', () => {
+    it('should handle question analysis failures', async () => {
+      mockGetQuestionInsights.mockRejectedValue(new Error('Analysis failed'));
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Test question');
+      await user.click(submitButton);
+
+      // Should still proceed with response generation
+      await waitFor(() => {
+        expect(screen.getByText('🎯 Expert Advisory Responses')).toBeInTheDocument();
+      });
+
+      // Should not show question analysis section
+      expect(screen.queryByText('Question Analysis')).not.toBeInTheDocument();
+    });
+
+    it('should provide meaningful error messages', async () => {
+      mockGenerateAdvisorResponses.mockRejectedValue(new Error('Service temporarily unavailable'));
+
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      await user.type(questionInput, 'Test question');
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Thank you for your question about "Test question"/)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Accessibility and User Experience', () => {
+    it('should be accessible to screen readers', async () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      // Check for proper headings
+      expect(screen.getByRole('heading', { name: /productboard advisory session/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /your advisory board/i })).toBeInTheDocument();
+
+      // Check for proper form labels
+      const questionInput = screen.getByLabelText('Your Question');
+      expect(questionInput).toBeInTheDocument();
+
+      // Check for proper button labels
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+      expect(submitButton).toBeInTheDocument();
+    });
+
+    it('should provide clear visual feedback during interactions', async () => {
+      renderWithTheme(
+        <ConsultationInterface
+          selectedAdvisors={mockAdvisors}
+          domain={mockDomain}
+          onBack={mockOnBack}
+          onComplete={mockOnComplete}
+        />
+      );
+
+      const questionInput = screen.getByLabelText('Your Question');
+      const submitButton = screen.getByRole('button', { name: /submit question/i });
+
+      // Test input focus
+      await user.click(questionInput);
+      expect(questionInput).toHaveFocus();
+
+      // Test button states
+      expect(submitButton).toBeDisabled(); // Should be disabled when input is empty
+
+      await user.type(questionInput, 'Test question');
+      expect(submitButton).not.toBeDisabled(); // Should be enabled when input has content
+    });
+  });
+});

@@ -1,0 +1,887 @@
+/**
+ * Premium Landing Transformation CSS Enhancements
+ * CSS-only animations and interactions for premium feel
+ */
+
+/* CSS Custom Properties */
+:root {
+  /* Motion System - Premium cubic-bezier easing for all transitions */
+  --motion-enter: 160ms;
+  --motion-hover: 120ms;
+  --motion-dialog: 200ms;
+  --motion-shimmer: 1200ms;
+  --motion-stagger: 160ms;
+  --motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-easing-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-card-lift: translateY(-8px);
+  --motion-card-hover: translateY(-2px);
+  
+  /* Grain System */
+  --grain-opacity: 0.08;
+  --grain-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  --grain-hero-bg: linear-gradient(135deg, #f8fafc 0%, rgba(59, 130, 246, 0.06) 50%, rgba(147, 51, 234, 0.04) 100%);
+  --grain-section-bg: linear-gradient(180deg, rgba(248, 250, 252, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+/* Shimmer Animation Keyframes - 1.2s duration as specified */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes shimmer-fade {
+  0%, 50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* Skeleton Loading States with 1.2s shimmer animation */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0px,
+    #e0e0e0 40px,
+    #f0f0f0 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-card {
+  @apply skeleton;
+  min-height: 120px;
+  width: 100%;
+}
+
+.skeleton-text {
+  @apply skeleton;
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+.skeleton-text.medium {
+  width: 80%;
+}
+
+.skeleton-text.long {
+  width: 100%;
+}
+
+/* Board-specific skeleton themes */
+.skeleton.clinical {
+  background: linear-gradient(
+    90deg,
+    #dbeafe 0px,
+    #bfdbfe 40px,
+    #dbeafe 80px
+  );
+}
+
+.skeleton.product {
+  background: linear-gradient(
+    90deg,
+    #e0e7ff 0px,
+    #c7d2fe 40px,
+    #e0e7ff 80px
+  );
+}
+
+.skeleton.education {
+  background: linear-gradient(
+    90deg,
+    #f3e8ff 0px,
+    #e9d5ff 40px,
+    #f3e8ff 80px
+  );
+}
+
+.skeleton.remedy {
+  background: linear-gradient(
+    90deg,
+    #ecfdf5 0px,
+    #d1fae5 40px,
+    #ecfdf5 80px
+  );
+}
+
+/* Premium Card Interactions - 8px lift on hover using transform properties */
+.premium-card {
+  transition: 
+    transform var(--motion-hover) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing);
+  will-change: transform, box-shadow;
+}
+
+.premium-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* 3px visible focus rings for all interactive elements with proper contrast */
+.premium-card:focus-visible,
+.interactive-element:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.8);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* High contrast focus rings for better accessibility */
+@media (prefers-contrast: high) {
+  .premium-card:focus-visible,
+  .interactive-element:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid #0066cc;
+    outline-offset: 2px;
+  }
+}
+
+.premium-card.lift-on-hover:hover {
+  transform: var(--motion-card-lift);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+/* Staggered Section Entrance Animations with 160ms delays between elements */
+.stagger-container > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 
+    opacity var(--motion-enter) var(--motion-easing),
+    transform var(--motion-enter) var(--motion-easing);
+}
+
+.stagger-container.animate-in > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 160ms staggered delays for premium feel */
+.stagger-container > *:nth-child(1) { transition-delay: 0ms; }
+.stagger-container > *:nth-child(2) { transition-delay: 160ms; }
+.stagger-container > *:nth-child(3) { transition-delay: 320ms; }
+.stagger-container > *:nth-child(4) { transition-delay: 480ms; }
+.stagger-container > *:nth-child(5) { transition-delay: 640ms; }
+.stagger-container > *:nth-child(6) { transition-delay: 800ms; }
+.stagger-container > *:nth-child(7) { transition-delay: 960ms; }
+.stagger-container > *:nth-child(8) { transition-delay: 1120ms; }
+
+/* Section entrance animations for hero elements */
+.section-entrance {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: 
+    opacity 400ms var(--motion-easing),
+    transform 400ms var(--motion-easing);
+}
+
+.section-entrance.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero section staggered entrance */
+.hero-stagger > *:nth-child(1) { 
+  animation-delay: 0ms; 
+}
+.hero-stagger > *:nth-child(2) { 
+  animation-delay: 160ms; 
+}
+.hero-stagger > *:nth-child(3) { 
+  animation-delay: 320ms; 
+}
+.hero-stagger > *:nth-child(4) { 
+  animation-delay: 480ms; 
+}
+
+/* Grain Texture Overlay */
+.grain-overlay {
+  position: relative;
+}
+
+.grain-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--grain-pattern);
+  opacity: var(--grain-opacity);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ultra-soft gradient backgrounds */
+.hero-gradient {
+  background: var(--grain-hero-bg);
+  position: relative;
+}
+
+.hero-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--grain-pattern);
+  opacity: var(--grain-opacity);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-gradient {
+  background: var(--grain-section-bg);
+}
+
+/* Hero Typography Responsive Scale */
+@media (max-width: 640px) {
+  .hero-h1-mobile {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-h1-desktop {
+    font-size: 48px;
+    line-height: 56px;
+  }
+}
+
+/* Comprehensive Interactive Element System */
+.interactive-element {
+  transition: 
+    transform var(--motion-hover) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing),
+    background-color var(--motion-hover) var(--motion-easing),
+    border-color var(--motion-hover) var(--motion-easing);
+  cursor: pointer;
+}
+
+.interactive-element:hover {
+  transform: translateY(-1px);
+}
+
+/* Button interactions */
+button.premium-button {
+  @apply interactive-element;
+  transition: 
+    transform var(--motion-hover) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing),
+    background-color var(--motion-hover) var(--motion-easing);
+}
+
+button.premium-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+button.premium-button:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
+}
+
+/* Input field interactions */
+input.premium-input,
+textarea.premium-textarea {
+  transition: 
+    border-color var(--motion-hover) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing),
+    background-color var(--motion-hover) var(--motion-easing);
+}
+
+input.premium-input:hover,
+textarea.premium-textarea:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+input.premium-input:focus,
+textarea.premium-textarea:focus {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Focus Ring System - Enhanced for all interactive elements */
+.focus-ring:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.8);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Touch Target Optimization */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Premium Micro-Interaction Classes */
+.micro-lift {
+  transition: transform var(--motion-hover) var(--motion-easing);
+}
+
+.micro-lift:hover {
+  transform: translateY(-2px);
+}
+
+.micro-lift-strong {
+  transition: transform var(--motion-hover) var(--motion-easing);
+}
+
+.micro-lift-strong:hover {
+  transform: translateY(-8px);
+}
+
+.micro-scale {
+  transition: transform var(--motion-hover) var(--motion-easing);
+}
+
+.micro-scale:hover {
+  transform: scale(1.02);
+}
+
+.micro-glow {
+  transition: box-shadow var(--motion-hover) var(--motion-easing);
+}
+
+.micro-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.micro-fade {
+  transition: opacity var(--motion-hover) var(--motion-easing);
+}
+
+.micro-fade:hover {
+  opacity: 0.8;
+}
+
+/* Premium Button Variants */
+.btn-premium {
+  @apply interactive-element micro-lift;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: 
+    transform var(--motion-hover) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing),
+    background var(--motion-hover) var(--motion-easing);
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
+}
+
+.btn-secondary {
+  @apply interactive-element micro-lift;
+  background: rgba(255, 255, 255, 0.9);
+  color: #374151;
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Reduced Motion Support - Disable or simplify all animations */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable shimmer animations, use simple pulse instead */
+  .skeleton,
+  .skeleton-card {
+    animation: shimmer-pulse 2s ease-in-out infinite;
+  }
+  
+  /* Disable card lift transforms but keep focus states */
+  .premium-card {
+    transition: box-shadow var(--motion-hover) ease-out;
+  }
+  
+  .premium-card:hover {
+    transform: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Simplify staggered animations to fade-only */
+  .stagger-container > * {
+    transform: none !important;
+    transition: opacity 300ms ease-out;
+  }
+  
+  .stagger-container.animate-in > * {
+    opacity: 1;
+    transform: none !important;
+  }
+  
+  /* Disable section entrance transforms */
+  .section-entrance {
+    transform: none !important;
+    transition: opacity 300ms ease-out;
+  }
+  
+  .section-entrance.animate-in {
+    opacity: 1;
+    transform: none !important;
+  }
+  
+  /* Disable hero stagger transforms */
+  .hero-stagger > * {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  /* Simplify demo results animation */
+  .demo-results .stagger-container {
+    animation: none;
+    opacity: 1;
+  }
+  
+  /* Keep focus rings but remove transform effects */
+  .premium-card:focus-visible,
+  .interactive-element:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    transform: none !important;
+  }
+  
+  /* Disable all keyframe animations except essential ones */
+  @keyframes fadeInUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #d1d5db 0px,
+      #9ca3af 40px,
+      #d1d5db 80px
+    );
+  }
+  
+  .premium-card:focus-visible {
+    outline: 4px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .skeleton,
+  .grain-overlay::before {
+    display: none;
+  }
+  
+  .premium-card {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+}
+/* Sp
+ecific Card Type Interactions */
+.advisor-card {
+  @apply premium-card;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.advisor-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.demo-input-card {
+  @apply premium-card;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(59, 130, 246, 0.1);
+  transition: 
+    transform var(--motion-hover) var(--motion-easing),
+    border-color var(--motion-hover) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing);
+}
+
+.demo-input-card:focus-within {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.summary-card {
+  @apply premium-card lift-on-hover;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+/* Board-themed card interactions */
+.card-clinical:hover {
+  box-shadow: 0 20px 60px rgba(37, 99, 235, 0.15);
+}
+
+.card-product:hover {
+  box-shadow: 0 20px 60px rgba(79, 70, 229, 0.15);
+}
+
+.card-education:hover {
+  box-shadow: 0 20px 60px rgba(168, 85, 247, 0.15);
+}
+
+.card-remedy:hover {
+  box-shadow: 0 20px 60px rgba(5, 150, 105, 0.15);
+}
+
+/* Static Advisor Response Card Styles */
+.advisor-card {
+  position: relative;
+  min-height: 200px;
+  transition: 
+    opacity var(--motion-enter) var(--motion-easing),
+    transform var(--motion-enter) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing);
+}
+
+.advisor-card:hover {
+  transform: var(--motion-card-hover);
+}
+
+/* Board-specific accent bars and theming */
+.advisor-card.card-clinical {
+  border-left: 4px solid #2563EB;
+}
+
+.advisor-card.card-product {
+  border-left: 4px solid #4F46E5;
+}
+
+.advisor-card.card-education {
+  border-left: 4px solid #A855F7;
+}
+
+.advisor-card.card-remedy {
+  border-left: 4px solid #059669;
+}
+
+/* Summary Card Styles */
+.summary-card {
+  position: relative;
+  min-height: 160px;
+  transition: 
+    opacity var(--motion-enter) var(--motion-easing),
+    transform var(--motion-enter) var(--motion-easing),
+    box-shadow var(--motion-hover) var(--motion-easing);
+}
+
+.summary-card:hover {
+  transform: var(--motion-card-lift);
+  box-shadow: 0 25px 80px rgba(59, 130, 246, 0.2);
+}
+
+/* Equal height card system using CSS Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.card-grid > * {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive card grid */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+}
+
+/* Loading state transitions */
+.loading-to-content {
+  transition: opacity 300ms var(--motion-easing);
+}
+
+.loading-to-content.loading {
+  opacity: 0.6;
+}
+
+.loading-to-content.loaded {
+  opacity: 1;
+}
+
+/* Demo Input Container Styles */
+.demo-input-container {
+  position: relative;
+}
+
+.skeleton-container {
+  position: relative;
+}
+
+.skeleton-container[aria-busy="true"] {
+  pointer-events: none;
+}
+
+/* Enhanced skeleton card with proper spacing */
+.skeleton-card {
+  @apply skeleton;
+  min-height: 120px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-card.clinical {
+  background: linear-gradient(
+    90deg,
+    #dbeafe 0px,
+    #bfdbfe 40px,
+    #dbeafe 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-card.product {
+  background: linear-gradient(
+    90deg,
+    #e0e7ff 0px,
+    #c7d2fe 40px,
+    #e0e7ff 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-card.education {
+  background: linear-gradient(
+    90deg,
+    #f3e8ff 0px,
+    #e9d5ff 40px,
+    #f3e8ff 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-card.remedy {
+  background: linear-gradient(
+    90deg,
+    #ecfdf5 0px,
+    #d1fae5 40px,
+    #ecfdf5 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+/* Smooth transition from skeleton to content (800-1000ms delay) */
+.demo-results {
+  transition: all 300ms var(--motion-easing);
+}
+
+.demo-results .stagger-container {
+  opacity: 0;
+  animation: fadeInUp 600ms var(--motion-easing) forwards;
+  animation-delay: 200ms;
+}
+
+/* Premium Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation Utility Classes */
+.animate-fade-in-up {
+  animation: fadeInUp 400ms var(--motion-easing) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 400ms var(--motion-easing) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 400ms var(--motion-easing) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 300ms var(--motion-easing) forwards;
+}
+
+/* Intersection Observer Animation Classes */
+.observe-entrance {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: 
+    opacity 600ms var(--motion-easing),
+    transform 600ms var(--motion-easing);
+}
+
+.observe-entrance.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.observe-entrance.stagger-1 { transition-delay: 0ms; }
+.observe-entrance.stagger-2 { transition-delay: 160ms; }
+.observe-entrance.stagger-3 { transition-delay: 320ms; }
+.observe-entrance.stagger-4 { transition-delay: 480ms; }
+.observe-entrance.stagger-5 { transition-delay: 640ms; }
+
+/* CTA Button Layout Fixes */
+.advisor-card-ctas {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+}
+
+.advisor-card-ctas button {
+  flex: 1 !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.advisor-card-ctas button span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Ensure buttons don't wrap to new lines */
+@media (max-width: 640px) {
+  .advisor-card-ctas button {
+    font-size: 0.75rem !important;
+    padding: 0.5rem 0.25rem !important;
+  }
+  
+  .advisor-card-ctas button span {
+    font-size: 0.7rem !important;
+  }
+}

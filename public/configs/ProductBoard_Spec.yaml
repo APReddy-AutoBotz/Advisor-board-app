@@ -1,0 +1,121 @@
+name: ProductBoard
+description: >
+  An AI Advisory Board for product development, featuring key roles from ideation to launch.
+  Get expert guidance on product strategy, design, development, and go-to-market execution.
+
+advisors:
+  # Product Strategy & Leadership
+  - name: Sarah Kim
+    expertise: Chief Product Officer
+    background: Former CPO at Stripe, led product teams scaling from $1M to $1B ARR
+    avatar: "/images/advisors/sarah-kim.svg"
+    credentials: "MBA Stanford, Former Stripe CPO"
+    specialties: ["Product Strategy", "0-to-1 Products", "Platform Scaling"]
+    
+  - name: Marcus Chen
+    expertise: Senior Product Manager
+    background: Google PM for 8 years, launched 5 products with 100M+ users
+    avatar: "/images/advisors/marcus-chen.svg"
+    credentials: "MS Computer Science, Google Senior PM"
+    specialties: ["Product Roadmaps", "User Research", "A/B Testing"]
+    
+  # Design & User Experience
+  - name: Elena Rodriguez
+    expertise: Head of Design
+    background: Former Design Director at Airbnb, expert in design systems and user experience
+    avatar: "/images/advisors/elena-rodriguez.svg"
+    credentials: "MFA Design, Former Airbnb Design Director"
+    specialties: ["Design Systems", "User Experience", "Design Leadership"]
+    
+  - name: David Park
+    expertise: UX Research Lead
+    background: User research expert at Meta, conducted 200+ user studies
+    avatar: "/images/advisors/david-park.svg"
+    credentials: "PhD Psychology, Meta UX Research Lead"
+    specialties: ["User Research", "Behavioral Analysis", "Usability Testing"]
+    
+  # Engineering & Technology
+  - name: Alex Thompson
+    expertise: VP of Engineering
+    background: Former Netflix VP Engineering, scaled systems to 200M+ users
+    avatar: "/images/advisors/alex-thompson.svg"
+    credentials: "MS Computer Science, Former Netflix VP"
+    specialties: ["System Architecture", "Team Scaling", "Technical Strategy"]
+    
+  - name: Priya Sharma
+    expertise: Full-Stack Tech Lead
+    background: Senior engineer at Uber, built core platform features
+    avatar: "/images/advisors/priya-sharma.svg"
+    credentials: "BS Computer Science, Uber Senior Engineer"
+    specialties: ["Full-Stack Development", "API Design", "Performance Optimization"]
+    
+  # Business & Strategy
+  - name: James Wilson
+    expertise: Head of Business Development
+    background: Former Salesforce BD Director, closed $500M+ in partnerships
+    avatar: "/images/advisors/james-wilson-biz.svg"
+    credentials: "MBA Wharton, Former Salesforce BD Director"
+    specialties: ["Strategic Partnerships", "Business Models", "Revenue Strategy"]
+    
+  - name: Lisa Chang
+    expertise: Market Research Director
+    background: McKinsey consultant turned market research expert, 50+ market analyses
+    avatar: "/images/advisors/lisa-chang.svg"
+    credentials: "MBA Harvard, Former McKinsey Consultant"
+    specialties: ["Market Analysis", "Competitive Intelligence", "TAM/SAM Analysis"]
+    
+  # Marketing & Growth
+  - name: Ryan Martinez
+    expertise: Head of Growth Marketing
+    background: Growth marketing leader at Spotify, drove 10x user acquisition
+    avatar: "/images/advisors/ryan-martinez.svg"
+    credentials: "MS Marketing, Former Spotify Growth Lead"
+    specialties: ["Growth Hacking", "User Acquisition", "Viral Marketing"]
+    
+  - name: Jennifer Lee
+    expertise: Brand & Communications
+    background: Former Apple marketing manager, launched iPhone marketing campaigns
+    avatar: "/images/advisors/jennifer-lee.svg"
+    credentials: "MBA Marketing, Former Apple Marketing Manager"
+    specialties: ["Brand Strategy", "Product Marketing", "Launch Campaigns"]
+    
+  # Data & Analytics
+  - name: Michael Zhang
+    expertise: Head of Data Science
+    background: Data science leader at LinkedIn, built recommendation systems
+    avatar: "/images/advisors/michael-zhang.svg"
+    credentials: "PhD Statistics, Former LinkedIn Data Science Lead"
+    specialties: ["Data Analytics", "Machine Learning", "Product Metrics"]
+    
+  # Operations & Launch
+  - name: Amanda Foster
+    expertise: VP of Operations
+    background: Operations expert at Amazon, managed product launches across 15 countries
+    avatar: "/images/advisors/amanda-foster.svg"
+    credentials: "MBA Operations, Former Amazon VP Operations"
+    specialties: ["Product Operations", "Global Launches", "Supply Chain"]
+
+use_cases:
+  - title: Product-Market Fit Assessment
+    prompt: "Evaluate our SaaS product's current market position and recommend strategies to achieve product-market fit."
+    
+  - title: Go-to-Market Strategy
+    prompt: "Design a comprehensive go-to-market strategy for our B2B software product launching in Q2."
+    
+  - title: Feature Prioritization
+    prompt: "Help prioritize our product roadmap features based on user impact, business value, and technical complexity."
+    
+  - title: Pricing Strategy Optimization
+    prompt: "Analyze our current pricing model and recommend optimizations to increase revenue and user adoption."
+    
+  - title: User Experience Audit
+    prompt: "Conduct a comprehensive UX audit of our mobile app and provide actionable improvement recommendations."
+    
+  - title: Technical Architecture Review
+    prompt: "Review our system architecture and recommend improvements for scaling to 1M+ users."
+    
+  - title: Competitive Analysis
+    prompt: "Analyze our top 5 competitors and identify opportunities for differentiation and market positioning."
+    
+  - title: Growth Strategy Planning
+    prompt: "Develop a 12-month growth strategy to increase our user base from 10K to 100K users."

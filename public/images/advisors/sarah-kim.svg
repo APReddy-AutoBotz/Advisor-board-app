@@ -1,0 +1,41 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgSarah" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A855F7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="60" fill="url(#bgSarah)"/>
+  
+  <!-- Face -->
+  <circle cx="60" cy="45" r="18" fill="#FDBCB4"/>
+  
+  <!-- Hair (professional bob) -->
+  <path d="M42 35 Q60 20 78 35 Q78 50 75 48 Q70 40 65 42 Q55 42 50 42 Q45 40 42 35" fill="#2D1B14"/>
+  
+  <!-- Eyes -->
+  <circle cx="54" cy="42" r="2" fill="#2D1B14"/>
+  <circle cx="66" cy="42" r="2" fill="#2D1B14"/>
+  
+  <!-- Professional glasses -->
+  <rect x="48" y="38" width="12" height="8" rx="2" fill="none" stroke="#8B5CF6" stroke-width="1.5"/>
+  <rect x="60" y="38" width="12" height="8" rx="2" fill="none" stroke="#8B5CF6" stroke-width="1.5"/>
+  <line x1="60" y1="42" x2="60" y2="42" stroke="#8B5CF6" stroke-width="1"/>
+  
+  <!-- Nose -->
+  <circle cx="60" cy="47" r="1" fill="#F4A688"/>
+  
+  <!-- Confident smile -->
+  <path d="M57 50 Q60 53 63 50" stroke="#2D1B14" stroke-width="1.5" fill="none"/>
+  
+  <!-- Executive blazer -->
+  <path d="M45 75 Q60 70 75 75 L75 120 L45 120 Z" fill="#1F2937"/>
+  <path d="M50 75 Q60 72 70 75 L70 120 L50 120 Z" fill="#FFFFFF"/>
+  
+  <!-- CPO badge -->
+  <circle cx="68" cy="85" r="4" fill="#FFD700"/>
+  <text x="68" y="87" text-anchor="middle" font-size="2" fill="#1F2937">CPO</text>
+</svg>

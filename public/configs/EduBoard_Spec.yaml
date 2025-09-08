@@ -1,0 +1,26 @@
+name: EduBoard
+description: >
+  An AI Advisory Board for rethinking education systems, curricula, and equity-driven reforms.
+advisors:
+  - name: Dr. Anand Venkataraman
+    expertise: Curriculum Reform
+    background: Led NEP 2020 advisory panels and global edtech initiatives
+  - name: Prof. Lila Mendez
+    expertise: Pedagogy & Assessment
+    background: UNESCO consultant on assessment reform in low-income countries
+  - name: Dr. Omar Rahman
+    expertise: Digital Inclusion
+    background: Founder of OpenSchool Africa and a policy activist
+  - name: Meera Balan
+    expertise: Parent & Student Advocate
+    background: Grassroots facilitator for school inclusion programs
+  - name: AI Sushruta
+    expertise: AI-Driven Personalization
+    background: Trained on 10,000+ adaptive learning interventions across STEM subjects
+use_cases:
+  - title: Syllabus Equity Review
+    prompt: "How inclusive and relevant is this national curriculum for tribal and rural learners?"
+  - title: Experiment Kit Affordability Feedback
+    prompt: "We want to deliver hands-on STEM kits under ₹100 per student. What trade-offs should we consider?"
+  - title: AI Tutor Ethics Panel
+    prompt: "What ethical principles should guide deployment of AI tutors in low-income classrooms?"

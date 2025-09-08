@@ -1,0 +1,16 @@
+﻿# Node / Next / Build
+node_modules/
+.next/
+dist/
+out/
+coverage/
+*.log
+npm-debug.log*
+yarn-error.log*
+.pnp.*
+.cache/
+.DS_Store
+# Env & local config
+.env
+.env.*
+!.env.example
