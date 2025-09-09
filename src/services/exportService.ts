@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import type { ConsultationSession, ExportOptions, SessionMetadata } from '../types/session';
 import type { AdvisorResponse } from '../types/domain';
+import { getBoardTheme } from '../lib/boardThemes';
 
 export class ExportService {
   /**
@@ -21,10 +22,22 @@ export class ExportService {
     const margin = 20;
     const lineHeight = 7;
     
-    // Brand colors
-    const primaryBlue = [37, 99, 235]; // Blue-600
-    const lightGray = [249, 250, 251]; // Gray-50
-    const darkGray = [17, 24, 39]; // Gray-900
+    // Get board theme colors
+    const boardTheme = getBoardTheme(session.domain);
+    
+    // Convert hex colors to RGB arrays for jsPDF
+    const hexToRgb = (hex: string): [number, number, number] => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16)
+      ] : [37, 99, 235]; // fallback to blue
+    };
+    
+    const primaryColor = hexToRgb(boardTheme.accent);
+    const lightBg = hexToRgb(boardTheme.background.medium);
+    const darkText = hexToRgb(boardTheme.text.primary);
 
     // Helper function to add text with word wrapping
     const addWrappedText = (text: string, x: number, y: number, maxWidth: number): number => {
@@ -44,8 +57,8 @@ export class ExportService {
       return yPosition;
     };
 
-    // Header with branding
-    doc.setFillColor(...primaryBlue);
+    // Header with branding using board theme colors
+    doc.setFillColor(...primaryColor);
     doc.rect(0, 0, 210, 40, 'F');
     
     // Logo area (using text for now, but could be replaced with actual logo)
@@ -62,13 +75,13 @@ export class ExportService {
     const domainName = session.domain || 'General';
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(140, 15, 50, 15, 3, 3, 'F');
-    doc.setTextColor(...primaryBlue);
+    doc.setTextColor(...primaryColor);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(domainName.toUpperCase(), 145, 24);
     
     yPosition = 55;
-    doc.setTextColor(...darkGray);
+    doc.setTextColor(...darkText);
 
     // Metadata section
     if (options.includeMetadata) {
@@ -129,7 +142,7 @@ export class ExportService {
         doc.roundedRect(margin - 5, yPosition - 5, 180, 25, 3, 3, 'F');
         
         // Advisor avatar circle
-        doc.setFillColor(...primaryBlue);
+        doc.setFillColor(...primaryColor);
         doc.circle(margin + 5, yPosition + 5, 8, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
@@ -138,7 +151,7 @@ export class ExportService {
         doc.text(initials, margin + 2, yPosition + 8);
         
         // Advisor name
-        doc.setTextColor(...darkGray);
+        doc.setTextColor(...darkText);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         yPosition = addWrappedText(`${advisor?.name || 'Unknown Advisor'}`, margin + 20, yPosition, 150);

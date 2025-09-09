@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Domain, Advisor } from '../../types/domain';
 import type { ConsultationSession } from '../../types/session';
 import Button from '../common/Button';
@@ -27,6 +27,11 @@ const ConsultationInterface: React.FC<ConsultationInterfaceProps> = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
   const [questionInsights, setQuestionInsights] = useState<any>(null);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handlePromptSubmit = async (userPrompt: string) => {
     console.log('🚀 Starting intelligent consultation with:', userPrompt);
