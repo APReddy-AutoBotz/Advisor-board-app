@@ -29,3 +29,11 @@ dist/
 .cache/
 .DS_Store
 Thumbs.db
+node_modules/
+dist/
+*.log
+.env*
+*.local
+.cache/
+.DS_Store
+Thumbs.db
