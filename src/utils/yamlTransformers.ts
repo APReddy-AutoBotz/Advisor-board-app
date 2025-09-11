@@ -13,7 +13,7 @@ export function transformAdvisors(
     name: spec.name || 'Unknown Advisor',
     expertise: spec.expertise || 'General Expertise',
     background: spec.background || 'No background provided',
-    domain,
+    domain: domainId,
     avatar: spec.avatar || undefined,
     isSelected: false,
   }));

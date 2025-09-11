@@ -3,14 +3,18 @@
  * Enhanced with right-side demo panel and premium interactions
  */
 
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 import Button from '../common/Button';
-import DemoInput from '../demo/DemoInput';
 import { trackEvent } from '../../lib/boards';
 import { useEntranceAnimations } from '../../utils/animationObserver';
+import '../../styles/premium-hero.css';
+
+// Lazy load demo input for better performance
+const DemoInput = lazy(() => import('../demo/DemoInput'));
 
 interface PremiumHeroProps {
   onStartSession: () => void;
+  onStartMultiDomainSession?: () => void;
   className?: string;
 }
 
@@ -22,14 +26,10 @@ interface StatPillProps {
 
 const StatPill: React.FC<StatPillProps> = ({ icon, value, label }) => {
   return (
-    <div className="premium-card micro-lift flex h-16 min-w-[140px] items-center justify-center rounded-full bg-white px-6 py-3 shadow-card ring-1 ring-ink-200">
-      <div className="text-center">
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-lg">{icon}</span>
-          <span className="text-2xl font-bold text-ink-900">{value}</span>
-        </div>
-        <div className="text-xs font-medium text-ink-600">{label}</div>
-      </div>
+    <div className="premium-stat-pill inline-flex items-center gap-1 text-xs rounded-full px-3 py-1.5 hover:scale-105 transition-transform duration-200">
+      <span className="text-sm">{icon}</span>
+      <span className="font-bold text-gray-800">{value}</span>
+      <span className="opacity-75 text-gray-600">{label}</span>
     </div>
   );
 };
@@ -40,17 +40,27 @@ interface LiveDemoPanelProps {
 
 const LiveDemoPanel: React.FC<LiveDemoPanelProps> = ({ onStartSession }) => {
   return (
-    <div className="demo-input-card rounded-2xl p-6 bg-white/95 backdrop-blur-sm border border-white/20">
-      <DemoInput 
-        onStartSession={onStartSession}
-        variant="hero"
-        className="w-full"
-      />
+    <div className="glass-hero p-6 max-w-[480px]">
+      <Suspense fallback={
+        <div className="animate-pulse">
+          <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
+          <div className="h-10 bg-gray-200 rounded-lg"></div>
+        </div>
+      }>
+        <DemoInput 
+          onStartSession={onStartSession}
+          variant="hero"
+          className="w-full"
+        />
+        <div className="text-xs opacity-75 truncate mt-2">
+          AI-powered advisory consultation platform
+        </div>
+      </Suspense>
     </div>
   );
 };
 
-const PremiumHero: React.FC<PremiumHeroProps> = ({ onStartSession, className = '' }) => {
+const PremiumHero: React.FC<PremiumHeroProps> = ({ onStartSession, onStartMultiDomainSession }) => {
   // Initialize entrance animations
   useEntranceAnimations();
 
@@ -59,113 +69,155 @@ const PremiumHero: React.FC<PremiumHeroProps> = ({ onStartSession, className = '
     onStartSession();
   };
 
+  const handleMultiBoardClick = () => {
+    trackEvent('multi_board_cta_click', { location: 'hero_banner' });
+    // Navigate to multi-board consultation
+    if (onStartMultiDomainSession) {
+      onStartMultiDomainSession();
+    } else {
+      // Fallback: trigger regular session
+      onStartSession();
+    }
+  };
+
   return (
-    <section className={`relative overflow-hidden hero-gradient py-16 sm:py-24 ${className}`}>
-      {/* Ultra-soft Gradient Background with Grain Overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
-        style={{ 
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.08\'/%3E%3C/svg%3E")',
-          background: 'linear-gradient(135deg, #f8fafc 0%, rgba(59, 130, 246, 0.06) 50%, rgba(147, 51, 234, 0.04) 100%)'
-        }}
-      />
-      
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        {/* CSS Grid Layout: 60/40 split on desktop, stacked on mobile */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-5 lg:gap-16 items-start">
+    <>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 py-20">
+        <div className="grid xl:grid-cols-12 lg:grid-cols-12 gap-6 items-start">
           
-          {/* Left Column: Hero Content (60% on desktop) */}
-          <div className="lg:col-span-3 hero-stagger">
-            {/* Trust Ribbon */}
-            <div className="observe-entrance stagger-1 mb-8 inline-flex items-center rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-6 py-2 text-sm font-bold text-white shadow-lg micro-glow">
-              🚀 Built with Kiro • AI-Powered • Enterprise Ready
+          {/* Left Column - Hero Content */}
+          <div className="xl:col-span-7 lg:col-span-6 text-center lg:text-left">
+            {/* Premium Trust Ribbon */}
+            <div className="observe-entrance stagger-1 mb-8 premium-trust-ribbon inline-flex items-center rounded-full px-6 py-3 text-sm font-bold text-white transform hover:scale-105 transition-all duration-300 relative">
+              <span className="mr-2">🚀</span>
+              Built with Kiro • AI-Powered • Enterprise Ready
             </div>
             
-            {/* Main Headline - Typography: H1 48/56 desktop, 36/44 mobile, ≤12 words */}
-            <h1 className="observe-entrance stagger-2 mb-6 text-4xl font-bold tracking-tight text-ink-900 leading-tight sm:text-5xl lg:text-6xl lg:leading-[56px] max-w-[12ch]">
-              Ask the Right Board.
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Get the Best Answer.</span>
+            {/* Main headline with premium gradient */}
+            <h1 className="observe-entrance stagger-2 text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+              <span className="text-gray-900">Ask the </span>
+              <span className="premium-gradient-text">
+                Right Board.
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 bg-clip-text text-transparent">
+                Get the Best Answer.
+              </span>
             </h1>
             
             {/* Sub-headline - ≤30 words */}
-            <p className="observe-entrance stagger-3 mb-8 text-lg leading-7 text-ink-600 sm:text-xl sm:leading-8 max-w-prose">
-              One prompt → multi-expert advice across Clinical, Product, Education, and Holistic Wellness—
-              <span className="font-semibold text-ink-900">structured, fast, and audit-friendly.</span>
+            <p className="observe-entrance stagger-3 mt-3 text-lg leading-7 text-gray-600 sm:text-xl sm:leading-8 max-w-[65ch]">
+              Multi-expert AI advice across Clinical, Product, Education, and Wellness boards—structured, fast, audit-friendly.
             </p>
             
-            {/* Stat Pills - Exactly 3 pills */}
-            <div className="observe-entrance stagger-4 mb-10 flex flex-wrap gap-4 sm:gap-6">
+            {/* Enhanced Stat Pills - More impactful metrics */}
+            <div className="observe-entrance stagger-4 mt-4 flex flex-wrap gap-2">
               <StatPill 
-                icon="⏱️" 
+                icon="⚡" 
                 value="2-min" 
-                label="avg" 
+                label="setup" 
               />
               <StatPill 
-                icon="💰" 
-                value="90%" 
-                label="cost cut" 
+                icon="🎯" 
+                value="4x" 
+                label="faster" 
               />
               <StatPill 
-                icon="🌐" 
-                value="24/7" 
-                label="access" 
+                icon="🧠" 
+                value="50+" 
+                label="experts" 
               />
             </div>
             
-            {/* Primary CTA */}
-            <div className="observe-entrance stagger-5 mb-8">
+            {/* Enhanced Primary CTA */}
+            <div className="observe-entrance stagger-5 mt-6 flex flex-col sm:flex-row gap-3 items-center lg:items-start">
               <Button
                 onClick={handleCTAClick}
                 variant="primary"
                 size="lg"
-                className="btn-premium w-full px-8 py-4 text-lg font-semibold shadow-xl sm:w-auto"
+                className="btn-premium px-8 py-4 text-lg font-semibold shadow-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 motion-safe:hover:-translate-y-0.5 transition-transform focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
               >
-                🚀 Start Your Boardroom Session
+                Start Your Boardroom Session
               </Button>
-            </div>
-            
-            {/* Social Proof / Trust Indicators */}
-            <div className="flex flex-wrap gap-8 text-center opacity-75">
-              <div>
-                <div className="text-2xl font-bold text-ink-900">4</div>
-                <div className="text-sm text-ink-600">Expert Boards</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-ink-900">50+</div>
-                <div className="text-sm text-ink-600">AI Advisors</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-ink-900">360°</div>
-                <div className="text-sm text-ink-600">Perspective</div>
-              </div>
+              <Button
+                onClick={() => {
+                  const boardsSection = document.querySelector('[data-board-picker]');
+                  boardsSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                variant="outline"
+                size="lg"
+                className="px-8 py-4 text-lg font-semibold border-2 hover:bg-gray-50 motion-safe:hover:-translate-y-0.5 transition-transform focus:outline-2 focus:outline-offset-2 focus:outline-gray-600"
+              >
+                See All Boards
+              </Button>
             </div>
           </div>
 
-          {/* Right Column: Live Demo Panel (40% on desktop) */}
-          <div className="lg:col-span-2">
-            <div className="sticky top-8">
-              <div className="mb-4 text-center lg:text-left">
-                <h2 className="text-xl font-semibold text-ink-900 mb-2">Try It Live</h2>
-                <p className="text-sm text-ink-600">See multi-expert AI advice in action</p>
-              </div>
+          {/* Right Column - Live Demo */}
+          <div className="xl:col-span-5 lg:col-span-6 relative">
+            <div className="max-w-[480px] lg:max-w-none">
               <LiveDemoPanel onStartSession={onStartSession} />
             </div>
           </div>
-
         </div>
-      </div>
-      
-      {/* Background Decoration */}
-      <div className="absolute left-1/2 top-0 -z-10 -translate-x-1/2 blur-3xl xl:-top-6" aria-hidden="true">
-        <div
-          className="aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20"
-          style={{
-            clipPath:
-              'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-          }}
-        />
+        
+        {/* Metrics Row */}
+        <div className="xl:col-span-7 lg:col-span-6 mt-8">
+          <div className="flex gap-6 items-center text-sm opacity-80">
+            <span>Trusted by 500+ organizations</span>
+            <span>•</span>
+            <span>99.9% uptime</span>
+            <span>•</span>
+            <span>SOC 2 compliant</span>
+          </div>
+        </div>
+
       </div>
     </section>
+    {/* Multi-Board CTA Section - Premium Banner */}
+    <section className="premium-multi-board-banner py-12 relative overflow-hidden">
+      {/* Animated background pattern */}
+      <div className="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+      
+      <div className="max-w-[1200px] mx-auto px-6 text-center relative z-10">
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-white mb-3">
+            🌟 Multi-Board Consultation
+          </h2>
+          <p className="text-xl text-emerald-50 max-w-2xl mx-auto">
+            Get coordinated advice from multiple expert boards simultaneously
+          </p>
+        </div>
+        
+        <button
+          onClick={handleMultiBoardClick}
+          className="premium-cta-button inline-flex items-center gap-4 px-8 py-4 text-emerald-600 rounded-full font-bold text-lg focus:outline-2 focus:outline-offset-2 focus:outline-white"
+        >
+          <span className="text-2xl">🚀</span>
+          <span>Try Multi-Board Consultation</span>
+          <span className="text-xl">→</span>
+        </button>
+        
+        <div className="mt-6 flex justify-center items-center gap-8 text-emerald-100 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="premium-pulse-dot w-2 h-2 bg-emerald-200 rounded-full"></span>
+            <span>4 Expert Boards</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="premium-pulse-dot w-2 h-2 bg-emerald-200 rounded-full"></span>
+            <span>Coordinated Responses</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="premium-pulse-dot w-2 h-2 bg-emerald-200 rounded-full"></span>
+            <span>Unified Insights</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    </>
   );
 };
 

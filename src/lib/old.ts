@@ -41,11 +41,11 @@ export const BOARDS: Record<string, Board> = {
     tagline: 'Silicon Valley product mastery from unicorn builders and scaling experts',
     description: 'Complete product development expertise from ideation to launch',
     color: {
-      primary: '#F59E0B',      // Amber 500
-      secondary: '#FDE68A',    // Amber 200
-      accent: '#D97706',       // Amber 600
-      background: '#FFFBEB',   // Amber 50
-      text: '#78350F'          // Amber 900
+      primary: '#6366F1',
+      secondary: '#C7D2FE',
+      accent: '#4F46E5',
+      background: '#EEF2FF',
+      text: '#312E81'
     },
     experts: [
       {

@@ -14,3 +14,18 @@ yarn-error.log*
 .env
 .env.*
 !.env.example
+
+.env.local
+
+.env.local
+
+# Local Netlify folder
+.netlify
+node_modules/
+dist/
+*.log
+.env*
+*.local
+.cache/
+.DS_Store
+Thumbs.db

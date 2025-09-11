@@ -104,16 +104,16 @@ const AdvisorSelectionPanel: React.FC<AdvisorSelectionPanelProps> = ({
               )}
             </div>
             
-            {/* Content */}
-            <div className="p-6 -mt-8 relative">
+            {/* Content - Elevated Design */}
+            <div className="px-6 pb-6 pt-4 relative">
               <div className="flex items-center space-x-4">
                 <div 
-                  className="w-16 h-16 rounded-xl shadow-lg flex items-center justify-center ring-4 ring-white"
+                  className="w-16 h-16 rounded-xl shadow-lg flex items-center justify-center ring-4 ring-white transform -translate-y-8"
                   style={{ backgroundColor: theme.accent }}
                 >
                   <div className="w-8 h-8 bg-white/20 rounded-lg"></div>
                 </div>
-                <div>
+                <div className="flex-1 pt-2">
                   <h2 className="text-2xl font-bold text-gray-900">{domain.name}</h2>
                   <p className="text-gray-600 mt-1">{domain.description}</p>
                   <div className="flex items-center mt-2 text-sm text-gray-500">

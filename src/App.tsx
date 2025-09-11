@@ -7,14 +7,16 @@ import DisclaimerBanner from './components/common/DisclaimerBanner'
 import SimpleLandingPage from './components/landing/SimpleLandingPage'
 import AdvisorSelectionPanel from './components/advisors/AdvisorSelectionPanel'
 import ConsultationInterface from './components/consultation/ConsultationInterface'
+import MultiBoardDemo from './components/demo/MultiBoardDemo'
 import type { Domain, Advisor } from './types/domain'
 import type { ConsultationSession } from './types/session'
 
-type AppView = 'landing' | 'advisor-selection' | 'consultation';
+type AppView = 'landing' | 'advisor-selection' | 'consultation' | 'multi-board-demo';
 
 // Simple URL-based navigation to preserve state on refresh
 const getViewFromURL = (): AppView => {
   const path = window.location.pathname;
+  if (path.includes('/multi-board')) return 'multi-board-demo';
   if (path.includes('/consultation')) return 'consultation';
   if (path.includes('/advisors')) return 'advisor-selection';
   return 'landing';
@@ -22,7 +24,9 @@ const getViewFromURL = (): AppView => {
 
 const updateURL = (view: AppView, domainId?: string) => {
   let path = '/';
-  if (view === 'advisor-selection' && domainId) {
+  if (view === 'multi-board-demo') {
+    path = '/multi-board';
+  } else if (view === 'advisor-selection' && domainId) {
     path = `/advisors/${domainId}`;
   } else if (view === 'consultation' && domainId) {
     path = `/consultation/${domainId}`;
@@ -89,17 +93,32 @@ function App() {
     setSelectedDomain(domain);
     setCurrentView('advisor-selection');
     updateURL('advisor-selection', domain.id);
+    
+    // Scroll to top of the page smoothly
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   const handleMultiDomainStart = () => {
-    // For now, show alert - can implement later
-    alert('Multi-domain mode coming soon! For now, try selecting a single domain.');
+    setCurrentView('multi-board-demo');
+    updateURL('multi-board-demo');
+    
+    // Scroll to top of the page smoothly
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   const handleAdvisorSelectionComplete = (advisors: Advisor[]) => {
     setSelectedAdvisors(advisors);
     setCurrentView('consultation');
     updateURL('consultation', selectedDomain?.id);
+    
+    // Scroll to top of the page smoothly
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   const handleBackToLanding = () => {
@@ -182,6 +201,13 @@ function App() {
               onBack={handleBackToAdvisorSelection}
               onComplete={handleSessionComplete}
             />
+          </div>
+        )}
+
+        {/* Multi-Board Demo */}
+        {currentView === 'multi-board-demo' && (
+          <div className="min-h-screen bg-gray-50">
+            <MultiBoardDemo onBack={handleBackToLanding} />
           </div>
         )}
       </ThemeProvider>

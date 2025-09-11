@@ -47,7 +47,10 @@ export default function SimpleLandingPage({ onStartSession, onStartMultiDomainSe
       </div>
 
       {/* Premium Hero Section */}
-      <PremiumHero onStartSession={handleStartSession} />
+      <PremiumHero 
+        onStartSession={handleStartSession} 
+        onStartMultiDomainSession={onStartMultiDomainSession}
+      />
       
       {/* Premium Board Picker */}
       <div ref={domainSectionRef} data-board-picker>

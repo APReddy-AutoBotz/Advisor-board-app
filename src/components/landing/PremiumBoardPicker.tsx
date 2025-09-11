@@ -288,16 +288,35 @@ const PremiumBoardPicker: React.FC<PremiumBoardPickerProps> = ({ onBoardSelect, 
   };
 
   return (
-    <section className={`py-16 sm:py-24 ${className}`}>
+    <section className={`py-16 sm:py-24 ${className}`} data-board-picker>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
+        {/* Enhanced Section Header */}
+        <div className="mx-auto max-w-3xl text-center mb-16">
+          <div className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-2 text-sm font-semibold text-blue-800 mb-6">
+            🎯 4 Specialized Advisory Boards
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl mb-6">
             Choose Your Advisory Board
           </h2>
-          <p className="mt-4 text-lg leading-8 text-ink-600">
+          <p className="text-lg leading-8 text-ink-600 mb-8">
             Select from specialized boards of industry experts, each with proven track records and deep domain expertise.
           </p>
+          
+          {/* Quick Stats */}
+          <div className="flex justify-center gap-8 text-sm text-ink-500">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+              <span>50+ AI Experts</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+              <span>Real-time Responses</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+              <span>Multi-perspective Analysis</span>
+            </div>
+          </div>
         </div>
 
         {/* Board Grid - 1/2/3 columns responsive */}

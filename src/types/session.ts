@@ -1,4 +1,5 @@
 import type { Advisor, AdvisorResponse, DomainId } from './domain';
+import type { Board } from '../lib/boards';
 
 export interface ConsultationSession {
   id: string;
@@ -10,6 +11,9 @@ export interface ConsultationSession {
   domain?: string;
   isMultiDomain?: boolean;
   domains?: DomainId[];
+  // New multi-board properties
+  selectedBoards?: Board[];
+  consultationMode?: 'single-board' | 'multi-board';
 }
 
 export interface MultiDomainSession extends ConsultationSession {

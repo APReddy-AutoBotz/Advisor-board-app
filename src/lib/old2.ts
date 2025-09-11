@@ -46,7 +46,7 @@ export const BOARDS: Record<string, Board> = {
       accent: '#D97706',       // Amber 600
       background: '#FFFBEB',   // Amber 50
       text: '#78350F'          // Amber 900
-    },
+    }
     experts: [
       {
         id: 'sarah-kim',

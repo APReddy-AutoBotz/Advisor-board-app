@@ -11,6 +11,7 @@ import { GeminiProvider } from './GeminiProvider';
 import { LocalProvider } from './LocalProvider';
 
 export class LLMIntegrationLayer {
+  private static instance: LLMIntegrationLayer;
   private providers: Map<string, LLMProvider> = new Map();
   private activeProvider: string;
   private config: EnvironmentConfig;
@@ -21,6 +22,104 @@ export class LLMIntegrationLayer {
     this.config = config;
     this.activeProvider = config.defaultProvider;
     this.initializeProviders();
+  }
+
+  /**
+   * Get singleton instance
+   */
+  static getInstance(): LLMIntegrationLayer {
+    if (!LLMIntegrationLayer.instance) {
+      // Create a minimal config directly from environment variables to avoid circular dependencies
+      const defaultConfig = {
+        llmProviders: {
+          openai: {
+            apiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
+            model: import.meta.env.VITE_LLM_MODEL || 'gpt-4o-mini',
+            temperature: parseFloat(import.meta.env.VITE_LLM_TEMPERATURE || '0.7'),
+            maxTokens: parseInt(import.meta.env.VITE_LLM_MAX_TOKENS || '800'),
+            timeout: parseInt(import.meta.env.VITE_LLM_TIMEOUT || '30000')
+          }
+        },
+        defaultProvider: import.meta.env.VITE_LLM_PROVIDER || 'openai',
+        enableFallback: import.meta.env.VITE_LLM_FALLBACK_TO_STATIC !== 'false',
+        retryPolicy: {
+          maxRetries: 3,
+          baseDelay: 1000,
+          maxDelay: 10000,
+          backoffMultiplier: 2
+        }
+      };
+      LLMIntegrationLayer.instance = new LLMIntegrationLayer(defaultConfig as any);
+    }
+    return LLMIntegrationLayer.instance;
+  }
+
+  /**
+   * Check if LLM integration is available and properly configured
+   */
+  async isAvailable(): Promise<boolean> {
+    try {
+      console.log('🔍 Checking LLM availability...');
+      console.log('📋 Config:', {
+        providers: Object.keys(this.config.llmProviders),
+        activeProvider: this.activeProvider,
+        hasApiKey: !!this.config.llmProviders[this.activeProvider as keyof typeof this.config.llmProviders]?.apiKey
+      });
+
+      // Check if we have any configured providers
+      const configuredProviders = Object.keys(this.config.llmProviders);
+      if (configuredProviders.length === 0) {
+        console.log('❌ No configured providers');
+        return false;
+      }
+
+      // Check if the active provider is available and has an API key
+      const activeProviderConfig = this.config.llmProviders[this.activeProvider as keyof typeof this.config.llmProviders];
+      if (!activeProviderConfig || !activeProviderConfig.apiKey) {
+        console.log('❌ No API key for active provider:', this.activeProvider);
+        return false;
+      }
+
+      // Validate API key format (basic validation without exposing the key)
+      if (!this.isValidApiKeyFormat(activeProviderConfig.apiKey, this.activeProvider)) {
+        console.log('❌ Invalid API key format for provider:', this.activeProvider);
+        return false;
+      }
+
+      // Check if the provider is registered and available
+      const provider = this.providers.get(this.activeProvider);
+      if (!provider || !provider.isAvailable()) {
+        console.log('❌ Provider not registered or available:', this.activeProvider);
+        return false;
+      }
+
+      console.log('✅ LLM integration is available');
+      return true;
+    } catch (error) {
+      console.warn('❌ LLM availability check failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Validate API key format without exposing the actual key
+   */
+  private isValidApiKeyFormat(apiKey: string, provider: string): boolean {
+    if (!apiKey || typeof apiKey !== 'string') {
+      return false;
+    }
+
+    // Basic format validation (without exposing the key)
+    switch (provider) {
+      case 'openai':
+        return apiKey.startsWith('sk-') && apiKey.length > 20;
+      case 'anthropic':
+        return apiKey.startsWith('sk-ant-') && apiKey.length > 20;
+      case 'gemini':
+        return apiKey.length > 20; // Gemini keys don't have a standard prefix
+      default:
+        return apiKey.length > 10; // Basic length check for other providers
+    }
   }
 
   /**
