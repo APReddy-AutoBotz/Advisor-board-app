@@ -2,5 +2,18 @@
 export * from './advisor';
 export * from './domain';
 export * from './session';
-export * from './llm';
-export * from './config';
+export type { 
+  LLMProvider, 
+  LLMResponse, 
+  LLMConfig,
+  BaseLLMProviderConfig,
+  OpenAIConfig,
+  AnthropicConfig,
+  GeminiConfig,
+  LocalConfig
+} from './llm';
+export type {
+  EnvironmentConfig,
+  LLMProviderConfig,
+  RetryPolicy
+} from './config';

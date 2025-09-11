@@ -122,10 +122,9 @@ describe('ConsultationInterface', () => {
       />
     );
 
-    expect(screen.getByText('Advisory Board Consultation')).toBeInTheDocument();
+    expect(screen.getByText('Cliniboard Advisory Session')).toBeInTheDocument();
     expect(screen.getByText('Ask your question to 2 selected advisors')).toBeInTheDocument();
-    expect(screen.getByText('Dr. Jane Smith,')).toBeInTheDocument();
-    expect(screen.getByText('Prof. John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Dr. Jane Smith, Prof. John Doe')).toBeInTheDocument();
   });
 
   it('shows error when no advisors are selected', () => {
@@ -179,13 +178,13 @@ describe('ConsultationInterface', () => {
     );
 
     const textarea = screen.getByRole('textbox');
-    const submitButton = screen.getByRole('button', { name: /ask advisors/i });
+    const submitButton = screen.getByRole('button', { name: /submit question/i });
     const testPrompt = 'What are the best practices for clinical trials?';
 
     fireEvent.change(textarea, { target: { value: testPrompt } });
     fireEvent.click(submitButton);
 
-    expect(mockSubmitPrompt).toHaveBeenCalledWith(testPrompt, undefined);
+    expect(mockSubmitPrompt).toHaveBeenCalledWith(testPrompt);
   });
 
   it('displays responses after prompt submission', async () => {
@@ -213,12 +212,12 @@ describe('ConsultationInterface', () => {
     );
 
     const textarea = screen.getByRole('textbox');
-    const submitButton = screen.getByRole('button', { name: /ask advisors/i });
+    const submitButton = screen.getByRole('button', { name: /submit question/i });
 
     fireEvent.change(textarea, { target: { value: 'Test question' } });
     fireEvent.click(submitButton);
 
-    expect(mockSubmitPrompt).toHaveBeenCalledWith('Test question', undefined);
+    expect(mockSubmitPrompt).toHaveBeenCalledWith('Test question');
   });
 
   it('shows session actions after responses are received', async () => {
@@ -280,7 +279,7 @@ describe('ConsultationInterface', () => {
     );
 
     expect(screen.getByText('Ask your question to 1 selected advisor')).toBeInTheDocument();
-    expect(screen.getByText('Dr. Jane Smith')).toBeInTheDocument();
+    expect(screen.getAllByText('Dr. Jane Smith')).toHaveLength(2); // Appears in summary and card
   });
 
   it('applies custom className', () => {
@@ -295,7 +294,7 @@ describe('ConsultationInterface', () => {
       />
     );
 
-    const container = screen.getByText('Advisory Board Consultation').closest(`.${customClass}`);
+    const container = screen.getByText('Cliniboard Advisory Session').closest(`.${customClass}`);
     expect(container).toBeInTheDocument();
   });
 

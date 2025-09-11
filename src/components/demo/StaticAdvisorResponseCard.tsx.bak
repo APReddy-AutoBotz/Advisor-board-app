@@ -1,10 +1,8 @@
 /**
  * Static Advisor Response Card Component
- *
+ * 
  * Displays hardcoded advisor responses for premium landing demo
  * Features board-specific theming, equal heights, and smooth reveal animations
- * (Patched) Adds clamp + Show more/less, scrubs "As Dr..." intros,
- * and shows medical disclaimer only for Clinical/Remedi.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -24,36 +22,22 @@ export const StaticAdvisorResponseCard: React.FC<StaticAdvisorResponseCardProps>
   className = ''
 }) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-
+  
   // Get board theme for styling
   const boardTheme = BOARD_THEMES[advisor.boardId];
-  const boardName = boardTheme?.name ?? '';
-  const boardId = String(advisor.boardId ?? '').toLowerCase();
-
-  // Identify boards that require medical disclaimer
-  const isClinical = /clinic/i.test(boardId) || /clinic/i.test(boardName);
-  const isRemedi = /(remedi|holistic|wellness)/i.test(boardId) || /(Holistic|Wellness|Remedi)/i.test(boardName);
-
+  
   // Trigger animation after delay
   useEffect(() => {
     if (isVisible) {
-      const timer = setTimeout(() => setShouldAnimate(true), advisor.delay);
+      const timer = setTimeout(() => {
+        setShouldAnimate(true);
+      }, advisor.delay);
+      
       return () => clearTimeout(timer);
     } else {
       setShouldAnimate(false);
     }
   }, [isVisible, advisor.delay]);
-
-  // Clean up legacy intros and normalize whitespace
-  const rawText = String(advisor.response ?? '');
-  const cleanedText = rawText
-    // remove "As Dr. ..." style autobiographical intro lines, if present
-    .replace(/^As\s+Dr\.[^\n]*\n+/i, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-
-  const isLong = cleanedText.length > 450; // controls toggle visibility
 
   // Board-specific styling with premium micro-interactions
   const cardClasses = [
@@ -73,9 +57,9 @@ export const StaticAdvisorResponseCard: React.FC<StaticAdvisorResponseCardProps>
   const getAvatarPlaceholder = () => {
     const initials = advisor.name.split(' ').map(n => n[0]).join('');
     return (
-      <div
+      <div 
         className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-lg"
-        style={{ backgroundColor: boardTheme?.accent }}
+        style={{ backgroundColor: boardTheme.accent }}
       >
         {initials}
       </div>
@@ -83,79 +67,63 @@ export const StaticAdvisorResponseCard: React.FC<StaticAdvisorResponseCardProps>
   };
 
   return (
-    <div
+    <div 
       className={cardClasses}
-      style={{ transitionDelay: shouldAnimate ? '0ms' : `${advisor.delay}ms` }}
+      style={{
+        transitionDelay: shouldAnimate ? '0ms' : `${advisor.delay}ms`
+      }}
     >
       {/* Board Theme Accent Bar */}
-      <div
+      <div 
         className="absolute top-0 left-0 right-0 h-1"
-        style={{ backgroundColor: boardTheme?.accent }}
+        style={{ backgroundColor: boardTheme.accent }}
       />
-
+      
       {/* Header with Avatar and Advisor Info */}
       <div className="flex items-start gap-4 mb-4">
         {/* Avatar */}
         <div className="flex-shrink-0">
           {getAvatarPlaceholder()}
         </div>
-
+        
         {/* Advisor Details */}
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-semibold text-gray-900 mb-1">
             {advisor.name}
           </h3>
-          <p
+          <p 
             className="text-sm font-medium mb-2"
-            style={{ color: boardTheme?.accent }}
+            style={{ color: boardTheme.accent }}
           >
             {advisor.role}
           </p>
-
+          
           {/* Board Badge */}
-          <span
+          <span 
             className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
             style={{
-              backgroundColor: boardTheme?.background,
-              color: boardTheme?.text,
-              border: `1px solid ${boardTheme?.accent}20`
+              backgroundColor: boardTheme.background,
+              color: boardTheme.text,
+              border: `1px solid ${boardTheme.accent}20`
             }}
           >
-            {boardTheme?.name}
+            {boardTheme.name}
           </span>
         </div>
       </div>
-
-      {/* Response Content (clamped by default) */}
+      
+      {/* Response Content */}
       <div className="space-y-3">
-        <div className={`text-gray-700 leading-relaxed text-sm ab-answer ${expanded ? '' : 'clamp-8'}`}>
-          {cleanedText}
-        </div>
-
-        {isLong && (
-          <div className="mt-2">
-            <button
-              type="button"
-              onClick={() => setExpanded(v => !v)}
-              className="text-xs font-medium underline text-slate-600 hover:text-slate-900"
-              aria-expanded={expanded}
-              aria-label={expanded ? 'Show less' : 'Show more'}
-            >
-              {expanded ? 'Show less' : 'Show more'}
-            </button>
-          </div>
-        )}
+        <p className="text-gray-700 leading-relaxed text-sm">
+          {advisor.response}
+        </p>
       </div>
-
+      
       {/* AI Disclaimer */}
       <div className="mt-4 pt-3 border-t border-gray-100">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          <span aria-hidden="true">🤖</span>
-          <span>
-            {isClinical || isRemedi
-              ? 'AI persona. Educational only — not medical advice.'
-              : 'Simulated AI persona response.'}
-          </span>
+          <span className="text-gray-400">🤖</span>
+          <span>AI Persona Response - Educational Use Only</span>
         </div>
       </div>
     </div>

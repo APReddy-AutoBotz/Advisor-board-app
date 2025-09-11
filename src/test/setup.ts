@@ -39,6 +39,12 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
+// Mock window.scrollTo
+Object.defineProperty(window, 'scrollTo', {
+  value: vi.fn(),
+  writable: true,
+});
+
 // Mock performance.mark and performance.measure for performance tests
 Object.defineProperty(window, 'performance', {
   value: {

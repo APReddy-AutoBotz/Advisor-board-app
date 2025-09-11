@@ -40,16 +40,18 @@ export interface RetryPolicy {
 }
 
 // Simple error types for LLM operations (avoiding circular dependencies)
-export enum LLMErrorType {
-  UNKNOWN_ERROR = 'unknown_error',
-  API_UNAVAILABLE = 'api_unavailable',
-  RATE_LIMITED = 'rate_limited',
-  INVALID_RESPONSE = 'invalid_response',
-  NETWORK_ERROR = 'network_error',
-  AUTHENTICATION_ERROR = 'authentication_error',
-  QUOTA_EXCEEDED = 'quota_exceeded',
-  RESPONSE_TIMEOUT = 'response_timeout'
-}
+export const LLMErrorType = {
+  UNKNOWN_ERROR: 'unknown_error',
+  API_UNAVAILABLE: 'api_unavailable',
+  RATE_LIMITED: 'rate_limited',
+  INVALID_RESPONSE: 'invalid_response',
+  NETWORK_ERROR: 'network_error',
+  AUTHENTICATION_ERROR: 'authentication_error',
+  QUOTA_EXCEEDED: 'quota_exceeded',
+  RESPONSE_TIMEOUT: 'response_timeout'
+} as const;
+
+export type LLMErrorType = typeof LLMErrorType[keyof typeof LLMErrorType];
 
 export class LLMError extends Error {
   public readonly type: LLMErrorType;

@@ -22,6 +22,13 @@ export const domainThemes: Record<DomainId, ThemeConfig> = {
     background: 'remedies-50',
     text: 'remedies-900',
   },
+  productboard: {
+    primary: 'product-600',
+    secondary: 'product-100',
+    accent: 'product-500',
+    background: 'product-50',
+    text: 'product-900',
+  },
 };
 
 export function getThemeForDomain(domainId: DomainId): ThemeConfig {

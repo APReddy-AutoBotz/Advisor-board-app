@@ -177,6 +177,27 @@ const StickyLiveDemo: React.FC<StickyLiveDemoProps> = ({ className = '' }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [visibleResponses, setVisibleResponses] = useState<Set<string>>(new Set());
   const [showSummary, setShowSummary] = useState(false);
+  const [stickyBehavior, setStickyBehavior] = useState<'sticky' | 'top-anchored' | 'static'>('sticky');
+
+  // Detect viewport and adjust sticky behavior
+  useEffect(() => {
+    const updateStickyBehavior = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      if (width < 768) {
+        setStickyBehavior('static');
+      } else if (width < 1024 || height < 640) {
+        setStickyBehavior('top-anchored');
+      } else {
+        setStickyBehavior('sticky');
+      }
+    };
+
+    updateStickyBehavior();
+    window.addEventListener('resize', updateStickyBehavior);
+    return () => window.removeEventListener('resize', updateStickyBehavior);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -222,9 +243,14 @@ const StickyLiveDemo: React.FC<StickyLiveDemoProps> = ({ className = '' }) => {
 
         {/* Demo Interface */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Left Rail - Sticky Input */}
+          {/* Left Rail - Responsive Positioning */}
           <div className="lg:col-span-2">
-            <div className="sticky top-8">
+            <div className={`
+              ${stickyBehavior === 'sticky' ? 'sticky top-8' : ''}
+              ${stickyBehavior === 'top-anchored' ? 'sticky top-4' : ''}
+              ${stickyBehavior === 'static' ? 'relative' : ''}
+              transition-all duration-300
+            `}>
               <div className="bg-white rounded-xl p-6 shadow-card ring-1 ring-ink-200">
                 <h3 className="text-lg font-semibold text-ink-900 mb-4">
                   Ask Your Question
@@ -308,12 +334,21 @@ const StickyLiveDemo: React.FC<StickyLiveDemoProps> = ({ className = '' }) => {
                     )}
                   </h4>
                   
-                  {DEMO_RESPONSES.map((response) => (
-                    <AdvisorResponseCard
+                  {DEMO_RESPONSES.map((response, index) => (
+                    <div
                       key={response.id}
-                      response={response}
-                      isVisible={visibleResponses.has(response.id)}
-                    />
+                      className="transform transition-all duration-500"
+                      style={{
+                        animationDelay: `${index * 160}ms`,
+                        transform: visibleResponses.has(response.id) ? 'translateY(0)' : 'translateY(20px)',
+                        opacity: visibleResponses.has(response.id) ? 1 : 0
+                      }}
+                    >
+                      <AdvisorResponseCard
+                        response={response}
+                        isVisible={visibleResponses.has(response.id)}
+                      />
+                    </div>
                   ))}
                 </div>
               )}

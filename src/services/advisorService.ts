@@ -151,7 +151,7 @@ export class AdvisorService {
   }
 
   /**
-   * Call Kiro's AI persona system (placeholder for actual implementation)
+   * Call Kiro's AI persona system using real LLM integration
    */
   private async callKiroPersona(
     advisor: Advisor,
@@ -168,6 +168,9 @@ export class AdvisorService {
       );
     }
 
+    // Import the intelligent response service for real LLM calls
+    const { generateAdvisorResponses } = await import('./intelligentResponseService');
+    
     // Create a timeout promise
     const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
@@ -175,11 +178,28 @@ export class AdvisorService {
       }, this.config.timeout);
     });
 
-    // Simulate Kiro persona call - replace with actual Kiro integration
-    const personaPromise = this.simulateKiroPersonaCall(advisor, prompt, personaConfig, sessionContext);
+    // Convert advisor to BoardExpert format
+    const boardExpert = {
+      id: advisor.id,
+      name: advisor.name,
+      code: advisor.id.substring(0, 3).toUpperCase(),
+      role: advisor.expertise,
+      blurb: advisor.background,
+      credentials: '',
+      avatar: '',
+      specialties: this.extractSpecializations(advisor.expertise)
+    };
+
+    // Use real LLM integration for persona call
+    const personaPromise = generateAdvisorResponses(
+      prompt,
+      [boardExpert],
+      advisor.domain.id
+    ).then(responses => responses[0]?.content || 'No response generated');
 
     try {
-      return await Promise.race([personaPromise, timeoutPromise]);
+      const response = await Promise.race([personaPromise, timeoutPromise]);
+      return response;
     } catch (error) {
       if (error instanceof Error && error.message === 'Request timeout') {
         throw new AdvisorServiceError(
@@ -192,73 +212,7 @@ export class AdvisorService {
     }
   }
 
-  /**
-   * Simulate Kiro persona call - replace with actual implementation
-   */
-  private async simulateKiroPersonaCall(
-    advisor: Advisor,
-    prompt: string,
-    personaConfig: PersonaConfig,
-    sessionContext?: string
-  ): Promise<string> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
-    // Create persona-specific response based on domain and expertise
-    const domainResponses = {
-      cliniboard: this.generateClinicalResponse(advisor, prompt, personaConfig),
-      eduboard: this.generateEducationResponse(advisor, prompt, personaConfig),
-      remediboard: this.generateRemediesResponse(advisor, prompt, personaConfig),
-    };
-
-    const response = domainResponses[advisor.domain.id as keyof typeof domainResponses] ||
-      this.generateGenericResponse(advisor, prompt, personaConfig);
-
-    return response;
-  }
-
-  /**
-   * Generate clinical domain response
-   */
-  private generateClinicalResponse(advisor: Advisor, prompt: string, persona: PersonaConfig): string {
-    const responses = [
-      `From a ${persona.expertise.toLowerCase()} perspective, I need to emphasize the regulatory implications here. ${prompt.includes('trial') ? 'This trial design requires careful consideration of FDA guidance documents.' : 'We must ensure compliance with ICH-GCP standards.'}`,
-      `Based on my experience in ${persona.expertise.toLowerCase()}, the key considerations are safety monitoring and data integrity. ${prompt.includes('adverse') ? 'These adverse events require immediate SUSAR reporting.' : 'We need robust pharmacovigilance protocols.'}`,
-      `As someone with ${persona.background.toLowerCase()}, I recommend a risk-based approach. The regulatory pathway should align with current FDA/EMA expectations for this indication.`,
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
-  }
-
-  /**
-   * Generate education domain response
-   */
-  private generateEducationResponse(advisor: Advisor, prompt: string, persona: PersonaConfig): string {
-    const responses = [
-      `From an educational equity standpoint, we need to consider how this impacts underserved communities. My background in ${persona.expertise.toLowerCase()} suggests we should prioritize inclusive design.`,
-      `Based on pedagogical research, the most effective approach would be to implement evidence-based practices. ${prompt.includes('curriculum') ? 'Curriculum reform should be data-driven and student-centered.' : 'We need to focus on measurable learning outcomes.'}`,
-      `Drawing from my experience in ${persona.expertise.toLowerCase()}, I recommend a systems thinking approach that addresses root causes rather than symptoms.`,
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
-  }
-
-  /**
-   * Generate remedies domain response
-   */
-  private generateRemediesResponse(advisor: Advisor, prompt: string, persona: PersonaConfig): string {
-    const responses = [
-      `From a holistic wellness perspective, we should consider the whole person approach. My expertise in ${persona.expertise.toLowerCase()} emphasizes the importance of natural healing processes.`,
-      `Traditional medicine teaches us that ${prompt.includes('treatment') ? 'treatment should work with the body\'s natural healing mechanisms' : 'prevention is always preferable to intervention'}. We need to honor both ancient wisdom and modern safety standards.`,
-      `Based on my background in ${persona.expertise.toLowerCase()}, I recommend integrating traditional practices with evidence-based approaches for optimal patient outcomes.`,
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
-  }
-
-  /**
-   * Generate generic response fallback
-   */
-  private generateGenericResponse(advisor: Advisor, prompt: string, persona: PersonaConfig): string {
-    return `Based on my expertise in ${persona.expertise}, I believe this requires careful consideration of multiple factors. My background in ${persona.background.toLowerCase()} suggests we should approach this systematically and consider all stakeholders involved.`;
-  }
 
   /**
    * Generate response with retry logic

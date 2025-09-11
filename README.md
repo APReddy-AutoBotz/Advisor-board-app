@@ -38,6 +38,35 @@ This project showcases the full power of Kiro's development platform:
 - **YAML Integration**: Domain configuration management
 - **Response Templates**: Context-aware advice generation
 
+## 🚀 **Quick Setup**
+
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Configure LLM Integration (Optional)
+Create `.env.local` file for AI-powered responses:
+```bash
+# Copy the example file
+cp .env.local.example .env.local
+
+# Add your OpenAI API key
+VITE_OPENAI_API_KEY=your_openai_api_key_here
+VITE_LLM_MODEL=gpt-4o-mini
+```
+
+### 3. Start Development Server
+```bash
+npm run dev
+```
+
+### 4. Test the Application
+- Visit `http://localhost:5173`
+- Select a domain (e.g., RemediBoard for wellness)
+- Ask: "Which is better for diabetic patients, white rice or millets?"
+- Get expert AI responses or fallback to curated content
+
 ## 🎥 **Demo**
 
 [🎬 Watch 3-Minute Demo Video](https://youtube.com/watch?v=demo-link)

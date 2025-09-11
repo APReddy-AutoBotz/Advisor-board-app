@@ -47,7 +47,7 @@ export class ConfigManager {
       
       const config: EnvironmentConfig = {
         llmProviders,
-        defaultProvider: this.getEnvVar('LLM_DEFAULT_PROVIDER') || this.getFirstAvailableProvider(llmProviders),
+        defaultProvider: this.getEnvVar('VITE_LLM_PROVIDER') || this.getFirstAvailableProvider(llmProviders),
         enableCaching: this.getBooleanEnvVar('LLM_ENABLE_CACHING', true),
         maxConcurrentRequests: this.getNumberEnvVar('LLM_MAX_CONCURRENT_REQUESTS', 10),
         responseTimeout: this.getNumberEnvVar('LLM_RESPONSE_TIMEOUT', 30000),
@@ -78,6 +78,53 @@ export class ConfigManager {
     const providers: any = {};
 
     // OpenAI configuration
+    const openaiApiKey = this.getEnvVar('VITE_OPENAI_API_KEY');
+    if (openaiApiKey) {
+      providers.openai = {
+        apiKey: openaiApiKey,
+        model: this.getEnvVar('VITE_LLM_MODEL') || 'gpt-4o-mini',
+        temperature: this.getNumberEnvVar('VITE_LLM_TEMPERATURE', 0.7),
+        maxTokens: this.getNumberEnvVar('VITE_LLM_MAX_TOKENS', 1000),
+        timeout: this.getNumberEnvVar('VITE_LLM_TIMEOUT', 30000)
+      };
+    }
+
+    // Anthropic configuration
+    const anthropicApiKey = this.getEnvVar('VITE_ANTHROPIC_API_KEY');
+    if (anthropicApiKey) {
+      providers.anthropic = {
+        apiKey: anthropicApiKey,
+        model: this.getEnvVar('VITE_ANTHROPIC_MODEL') || 'claude-3-haiku-20240307',
+        temperature: this.getNumberEnvVar('VITE_LLM_TEMPERATURE', 0.7),
+        maxTokens: this.getNumberEnvVar('VITE_LLM_MAX_TOKENS', 1000),
+        timeout: this.getNumberEnvVar('VITE_LLM_TIMEOUT', 30000)
+      };
+    }
+
+    // Gemini configuration
+    const geminiApiKey = this.getEnvVar('VITE_GEMINI_API_KEY');
+    if (geminiApiKey) {
+      providers.gemini = {
+        apiKey: geminiApiKey,
+        model: this.getEnvVar('VITE_GEMINI_MODEL') || 'gemini-pro',
+        temperature: this.getNumberEnvVar('VITE_LLM_TEMPERATURE', 0.7),
+        maxTokens: this.getNumberEnvVar('VITE_LLM_MAX_TOKENS', 1000),
+        timeout: this.getNumberEnvVar('VITE_LLM_TIMEOUT', 30000)
+      };
+    }
+
+    // If no providers configured, add default OpenAI config without API key
+    if (Object.keys(providers).length === 0) {
+      providers.openai = {
+        apiKey: '',
+        model: 'gpt-4o-mini',
+        temperature: 0.7,
+        maxTokens: 1000,
+        timeout: 30000
+      };
+    }
+
+    return providers;
     const openaiKey = this.getEnvVar('OPENAI_API_KEY');
     if (openaiKey) {
       providers.openai = {
@@ -162,14 +209,19 @@ export class ConfigManager {
    * Get environment variable with fallback support
    */
   private getEnvVar(key: string): string | undefined {
-    // Try process.env first (Node.js environment)
-    if (typeof process !== 'undefined' && process.env) {
-      return process.env[key];
+    // For Vite environment variables, use import.meta.env directly
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      // If key already starts with VITE_, use it directly
+      if (key.startsWith('VITE_')) {
+        return import.meta.env[key];
+      }
+      // Otherwise, try both with and without VITE_ prefix
+      return import.meta.env[key] || import.meta.env[`VITE_${key}`];
     }
 
-    // Try import.meta.env for Vite (browser environment)
-    if (typeof import.meta !== 'undefined' && import.meta.env) {
-      return import.meta.env[`VITE_${key}`];
+    // Fallback to process.env for Node.js environment (SSR, tests, etc.)
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env[key];
     }
 
     return undefined;
