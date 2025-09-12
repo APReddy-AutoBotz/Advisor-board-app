@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+﻿import { renderHook, act } from '@testing-library/react';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
 import { useSessionState } from '../useSessionState';
 import type { ConsultationSession } from '../../types/session';

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Local Provider Implementation
  * Handles local LLM integration (Ollama, LocalAI, etc.) with proper error handling and retry logic
  */

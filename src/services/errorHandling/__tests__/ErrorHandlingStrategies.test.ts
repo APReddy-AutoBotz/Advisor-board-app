@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Error Handling Strategies Tests
  * Tests for error handling strategy configuration and retrieval
  */

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useSessionState } from '../../hooks/useSessionState';
 import type { ConsultationSession, SessionMetadata } from '../../types/session';
 import Button from '../common/Button';

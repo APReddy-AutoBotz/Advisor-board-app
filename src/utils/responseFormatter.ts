@@ -1,4 +1,4 @@
-import type { AdvisorResponse } from '../types/domain';
+﻿import type { AdvisorResponse } from '../types/domain';
 
 export function formatResponse(response: AdvisorResponse): string {
   // Placeholder for response formatting logic

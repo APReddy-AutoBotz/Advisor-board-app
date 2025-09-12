@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Toast Notification Component
  * 
  * Displays selection feedback and other notifications

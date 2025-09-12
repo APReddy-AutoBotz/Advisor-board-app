@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ConfigValidator Tests
  * Tests for configuration validation functionality
  */

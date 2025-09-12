@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { yamlConfigLoader } from '../../services';
 import type { Domain } from '../../types';
 

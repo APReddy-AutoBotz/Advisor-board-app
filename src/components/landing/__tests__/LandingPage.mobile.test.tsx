@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+﻿import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '../../../utils/testUtils';
 import { simulateMobileViewport, simulateTabletViewport, simulateDesktopViewport } from '../../../utils/testUtils';
 import LandingPage from '../LandingPage';

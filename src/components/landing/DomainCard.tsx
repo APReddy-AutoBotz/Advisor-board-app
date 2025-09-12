@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTheme } from '../common/ThemeProvider';
 import Card from '../common/Card';
 // Button import removed as it's not used in this component
@@ -172,7 +172,7 @@ export default function DomainCard({
         {/* Selection Status */}
         {isActive && (
           <div className={`text-xs font-medium ${colorClasses.title} mb-2`}>
-            ✓ Selected
+            âœ“ Selected
           </div>
         )}
 

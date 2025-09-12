@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Intelligent Response Service
  * 
  * This service generates intelligent, contextual responses from AI advisors
@@ -8,6 +8,7 @@
 import { personaPromptService } from './personaPromptService';
 import type { BoardExpert, Board } from '../lib/boards';
 import { LLMIntegrationLayer } from './llm/LLMIntegrationLayer';
+import { craftPrompt } from './prompt/personaLenses';
 
 export interface QuestionInsights {
   type: string;
@@ -296,8 +297,8 @@ export async function generateMultiBoardResponses(
   request: MultiDomainConsultationRequest
 ): Promise<MultiDomainResponse[]> {
   try {
-    console.log('🌐 Generating multi-board responses for:', request.question);
-    console.log('📋 Selected boards:', request.selectedBoards.map(b => b.title));
+    console.log('ðŸŒ Generating multi-board responses for:', request.question);
+    console.log('ðŸ“‹ Selected boards:', request.selectedBoards.map(b => b.title));
 
     // Generate coordination context
     const coordinationContext = generateCoordinationContext(request.selectedBoards, request.question);
@@ -305,7 +306,7 @@ export async function generateMultiBoardResponses(
     // Create parallel API calls for each board
     const boardResponsePromises = request.selectedBoards.map(async (board) => {
       try {
-        console.log(`🎯 Processing board: ${board.title}`);
+        console.log(`ðŸŽ¯ Processing board: ${board.title}`);
         
         // Get coordination config for this board
         const coordinationConfig = getCoordinationConfigForBoard(board.id, request.selectedBoards);
@@ -326,7 +327,7 @@ export async function generateMultiBoardResponses(
           coordinationContext,
         };
       } catch (error) {
-        console.error(`❌ Error generating responses for board ${board.title}:`, error);
+        console.error(`âŒ Error generating responses for board ${board.title}:`, error);
         
         // Return fallback response for this board
         return {
@@ -342,11 +343,11 @@ export async function generateMultiBoardResponses(
     // Wait for all board responses to complete
     const multiDomainResponses = await Promise.all(boardResponsePromises);
     
-    console.log('✅ Generated multi-board responses for', multiDomainResponses.length, 'boards');
+    console.log('âœ… Generated multi-board responses for', multiDomainResponses.length, 'boards');
     return multiDomainResponses;
     
   } catch (error) {
-    console.error('❌ Error in multi-board response generation:', error);
+    console.error('âŒ Error in multi-board response generation:', error);
     
     // Return fallback responses for all boards
     return request.selectedBoards.map(board => ({
@@ -393,7 +394,7 @@ async function generateCoordinatedBoardResponses(
         confidence: responseResult.isLLMGenerated ? 0.85 : 0.7, // Higher confidence for LLM, lower for fallback
       };
     } catch (error) {
-      console.error(`❌ Error generating coordinated response for ${expert.name}:`, error);
+      console.error(`âŒ Error generating coordinated response for ${expert.name}:`, error);
       
       // Fallback to regular response generation with lower confidence
       return {
@@ -421,9 +422,9 @@ export async function generateAdvisorResponses(
   domainId: string
 ): Promise<AdvisorResponse[]> {
   try {
-    console.log('🧠 Generating intelligent responses for:', question);
-    console.log('👥 Experts:', experts.map(e => e.name));
-    console.log('🎯 Domain:', domainId);
+    console.log('ðŸ§  Generating intelligent responses for:', question);
+    console.log('ðŸ‘¥ Experts:', experts.map(e => e.name));
+    console.log('ðŸŽ¯ Domain:', domainId);
 
     // Get question insights
     const insights = await getQuestionInsights(question);
@@ -462,7 +463,7 @@ export async function generateAdvisorResponses(
     });
 
     const responses = await Promise.all(responsePromises);
-    console.log('✅ Generated', responses.length, 'intelligent responses');
+    console.log('âœ… Generated', responses.length, 'intelligent responses');
     
     return responses;
   } catch (error) {
@@ -568,12 +569,12 @@ async function generateCoordinatedLLMResponse(expert: BoardExpert, coordinatedPr
       });
       
       if (llmResponse && llmResponse.content) {
-        console.log(`✅ Generated coordinated LLM response for ${expert.name}`);
+        console.log(`âœ… Generated coordinated LLM response for ${expert.name}`);
         return { content: llmResponse.content, isLLMGenerated: true };
       }
     }
   } catch (error) {
-    console.warn(`⚠️ Coordinated LLM generation failed for ${expert.name}, using fallback:`, error);
+    console.warn(`âš ï¸ Coordinated LLM generation failed for ${expert.name}, using fallback:`, error);
   }
   
   // Fallback to domain-specific insight
@@ -642,12 +643,12 @@ async function generateLLMResponse(expert: BoardExpert, question: string, domain
       });
       
       if (llmResponse && llmResponse.content) {
-        console.log(`✅ Generated LLM response for ${expert.name}`);
+        console.log(`âœ… Generated LLM response for ${expert.name}`);
         return llmResponse.content;
       }
     }
   } catch (error) {
-    console.warn(`⚠️ LLM generation failed for ${expert.name}, using fallback:`, error);
+    console.warn(`âš ï¸ LLM generation failed for ${expert.name}, using fallback:`, error);
   }
   
   // Fallback to static contextual responses
@@ -658,37 +659,13 @@ async function generateLLMResponse(expert: BoardExpert, question: string, domain
  * Create a persona-specific prompt for LLM generation
  */
 function createPersonaPrompt(expert: BoardExpert, question: string, domainId: string): string {
-  const expertRole = expert.role;
-  const expertName = expert.name;
-  const specialties = expert.specialties.join(', ');
-  
-  // Get board-specific lane restrictions
-  const laneRestrictions = getBoardLaneRestrictions(domainId);
-  
-  // Get role-specific perspective and approach
-  const roleSpecificGuidance = getRoleSpecificGuidance(expertRole, domainId);
-  
-  return `GLOBAL POLICIES (Multi-Board):
-1) Stay in your lane: ${domainId} = ${laneRestrictions.allowedTopics}. Do not comment on other domains.
-2) First line = direct verdict answering the user's question.
-3) Max 5 bullets; each ≤ 12 words; avoid fluff.
-4) If clinical/nutrition: add disclosure "educational, not medical advice."
-5) Never use autobiographical intros like "As Dr. ...".
-6) If question is outside your lane, say: "Out of scope for ${domainId}; refer to ${laneRestrictions.referTo}."
-
-You are ${expertName}, a ${expertRole} with expertise in ${specialties}. 
-
-Question: "${question}"
-
-${roleSpecificGuidance}
-
-Format your response as:
-**Verdict:** [Direct 1-sentence answer]
-**Assumptions:** [2-3 key assumptions, each ≤12 words]
-**Guidance:** [3-5 actionable bullets, each ≤12 words]
-${laneRestrictions.requiresDisclaimer ? '**Disclosure:** Educational content, not medical advice.' : ''}
-
-Stay strictly within your domain expertise. Be concise and actionable.`;
+  return craftPrompt({
+    id: (expert as any).id || (expert as any).slug || (expert as any).name?.toLowerCase?.().replace(/\s+/g,'-') || '',
+    name: expert.name,
+    role: (expert as any).role || (expert as any).title,
+    boardId: domainId,
+    question
+  });
 }
 
 /**
@@ -706,7 +683,7 @@ function getBoardLaneRestrictions(domainId: string): {
       requiresDisclaimer: true
     },
     remediboard: {
-      allowedTopics: 'nutrition/TCM routines, safe habit protocols, herb–drug cautions',
+      allowedTopics: 'nutrition/TCM routines, safe habit protocols, herbâ€“drug cautions',
       referTo: 'clinical board for FDA pathways',
       requiresDisclaimer: true
     },

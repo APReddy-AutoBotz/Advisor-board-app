@@ -1,4 +1,4 @@
-import type { DomainId, ThemeConfig } from '../types/domain';
+﻿import type { DomainId, ThemeConfig } from '../types/domain';
 
 export const domainThemes: Record<DomainId, ThemeConfig> = {
   cliniboard: {

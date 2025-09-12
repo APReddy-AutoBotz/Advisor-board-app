@@ -1,4 +1,4 @@
-// Central export for all components
+﻿// Central export for all components
 export { default as Button } from './common/Button';
 export { default as Card } from './common/Card';
 export { default as ThemeProvider } from './common/ThemeProvider';

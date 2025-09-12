@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf';
+﻿import jsPDF from 'jspdf';
 import type { ConsultationSession, ExportOptions, SessionMetadata } from '../types/session';
 import type { AdvisorResponse } from '../types/domain';
 import { getBoardTheme } from '../lib/boardThemes';

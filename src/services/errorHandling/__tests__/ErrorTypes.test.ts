@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Error Types Tests
  * Tests for error type definitions and error classes
  */

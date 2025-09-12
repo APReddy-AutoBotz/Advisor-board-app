@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LLM Provider Integration Types
  * Defines interfaces and types for LLM provider integration
  */

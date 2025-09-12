@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Error Recovery Manager Tests
  * Tests for comprehensive error recovery and coordination
  */

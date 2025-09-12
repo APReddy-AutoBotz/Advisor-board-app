@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Complete User Workflow Integration Test - Fixed Version
  * 
  * Tests the entire user journey from question submission to response display

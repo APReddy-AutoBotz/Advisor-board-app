@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+﻿import { useState, useCallback, useEffect } from 'react';
 import type { ConsultationSession, SessionState, SessionMetadata } from '../types/session';
 import type { Advisor } from '../types/domain';
 

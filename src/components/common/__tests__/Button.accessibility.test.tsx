@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+﻿import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '../../../utils/testUtils';
 import { checkTouchTargetSize, checkAriaLabels, checkKeyboardNavigation } from '../../../utils/testUtils';
 import Button from '../Button';
@@ -152,7 +152,7 @@ describe('Button Accessibility', () => {
     });
 
     it('should properly announce icons', () => {
-      const icon = <span aria-hidden="true">→</span>;
+      const icon = <span aria-hidden="true">â†’</span>;
       render(<Button rightIcon={icon}>Next</Button>);
       
       const button = screen.getByRole('button', { name: 'Next' });

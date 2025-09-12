@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import LandingPage from '../landing/LandingPage';
 import Button from '../common/Button';
 import type { Domain } from '../../types';
@@ -66,7 +66,7 @@ export default function LandingDemo() {
             </p>
             
             <Button onClick={handleBackToLanding} variant="outline">
-              ← Back to Landing Page
+              â† Back to Landing Page
             </Button>
           </div>
         </div>

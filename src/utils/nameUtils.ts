@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Name utility functions for advisor cards
  * Handles extraction of proper names from titles and prefixes
  */

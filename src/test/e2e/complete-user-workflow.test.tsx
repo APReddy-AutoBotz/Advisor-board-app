@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+﻿import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
@@ -77,7 +77,7 @@ describe('Complete User Workflow E2E Tests', () => {
     renderWithTheme(<App />);
 
     // 1. Landing page should be visible
-    expect(screen.getByText('AdvisorBoard – Ask the Greatest Minds')).toBeInTheDocument();
+    expect(screen.getByText('AdvisorBoard â€“ Ask the Greatest Minds')).toBeInTheDocument();
     expect(screen.getByText('Cliniboard')).toBeInTheDocument();
     expect(screen.getByText('EduBoard')).toBeInTheDocument();
     expect(screen.getByText('RemediBoard')).toBeInTheDocument();

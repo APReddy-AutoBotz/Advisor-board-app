@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Fallback Manager
  * Manages fallback mechanisms for API failures, network issues, and rate limiting
  * 

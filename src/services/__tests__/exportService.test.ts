@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ExportService } from '../exportService';
 import type { ConsultationSession } from '../../types/session';
 import type { Advisor, AdvisorResponse } from '../../types/domain';

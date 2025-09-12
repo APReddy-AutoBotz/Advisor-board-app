@@ -1,4 +1,4 @@
-// Central export for all hooks
+﻿// Central export for all hooks
 export { useAdvisorPersonas } from './useAdvisorPersonas';
 export { useKiroIntegration } from './useKiroIntegration';
 export { useSessionState } from './useSessionState';

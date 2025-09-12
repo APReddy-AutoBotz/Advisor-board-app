@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Configuration and Environment Management Types
  * Defines interfaces for configuration, feature flags, and validation
  */

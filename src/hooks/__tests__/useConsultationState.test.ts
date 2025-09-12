@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+﻿import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useConsultationState } from '../useConsultationState';
 import type { Advisor } from '../../types/domain';

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Logger Tests
  * Tests for logging and monitoring functionality
  */

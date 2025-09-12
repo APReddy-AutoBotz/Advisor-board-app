@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Static Demo Skeleton Component
  * 
  * Displays board-themed skeleton cards during loading state

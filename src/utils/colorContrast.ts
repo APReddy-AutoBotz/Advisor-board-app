@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Color contrast utilities for accessibility testing
  * Based on WCAG 2.1 guidelines
  */

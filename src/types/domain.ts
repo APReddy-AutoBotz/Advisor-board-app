@@ -1,4 +1,4 @@
-export type DomainId = 'cliniboard' | 'productboard' | 'eduboard' | 'remediboard';
+﻿export type DomainId = 'cliniboard' | 'productboard' | 'eduboard' | 'remediboard';
 
 export interface Domain {
   id: DomainId;

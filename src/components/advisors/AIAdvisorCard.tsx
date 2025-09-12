@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AI-Advisor Card Component
  * 
  * Enhanced advisor card with gradient backgrounds, portrait integration,
