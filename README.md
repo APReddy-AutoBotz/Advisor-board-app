@@ -1,100 +1,107 @@
-# 🏆 AdvisorBoard - Expert Consultation Platform
+# 🏆 AdvisorBoard — Multi-Board AI Advisory Panels
 
-[![Built with Kiro](https://img.shields.io/badge/Built%20with-Kiro-blue?style=for-the-badge)](https://kiro.ai)
-[![Hackathon Winner](https://img.shields.io/badge/Hackathon-Winner-gold?style=for-the-badge)](https://github.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+**Live:** https://advisorboard-panels.netlify.app  
+**License:** MIT  
+**Hackathon Category:** **Productivity & Workflow Tools**
 
-> **Transform expert consultation from days to minutes, from $1000s to free, from scattered advice to structured reports.**
+Transform expert consultation from **days to minutes** — and from scattered opinions to **coordinated, audit-friendly guidance**.
 
-## 🎯 **What is AdvisorBoard?**
+> **Why productivity?** AdvisorBoard collapses time-consuming expert outreach, scheduling, and synthesis into one streamlined flow: pick boards → ask once → get structured, executive-ready answers. That’s pure flow-boost.
 
-AdvisorBoard is an AI-powered expert consultation platform that provides instant access to specialized advisory panels across multiple domains. Built entirely with Kiro's spec-driven development approach, it revolutionizes how professionals get expert guidance.
+---
 
-### 🚀 **Key Features**
+## ✨ What is AdvisorBoard?
 
-- **🎯 Domain-Specific Panels**: Clinical Research, Education, Holistic Wellness
-- **⚡ Instant Expert Responses**: Get advice in under 2 minutes
-- **📊 Professional Reports**: Download branded PDF consultation reports
-- **🔄 Multi-Domain Support**: Consult across multiple expertise areas
-- **📱 Responsive Design**: Works seamlessly on all devices
-- **🔒 Enterprise Ready**: Built for compliance and professional use
+AdvisorBoard lets you assemble **domain-specific AI advisory boards** (Product, Clinical, Holistic Wellness, Education), ask once, and get **coordinated answers** with:
 
-## 🛠 **Built with Kiro**
+- **Consensus / Tension / Decision** synthesis
+- **Distinct persona voices** (e.g., **CPO** vs **PM**), with **smart fallbacks**
+- **Compliance-minded** language and disclaimers where appropriate
+- **Premium UX** (shimmer, stagger, glass, sticky demo), **A11y first** (focus rings, reduced motion), and **Perf** targets
 
-This project showcases the full power of Kiro's development platform:
+Built with **Kiro** (spec-driven + vibes + steering) and deployed with a **server-side LLM proxy** (Netlify Function) so **no secrets live in the browser**.
 
-### 📋 **Spec-Driven Development**
-- **Requirements**: Comprehensive user stories and acceptance criteria
-- **Design**: Detailed architecture and component specifications  
-- **Tasks**: 50+ implementation tasks generated through spec-to-code
+> Clinical/WELLNESS NOTE: AI personas are **educational only** and **not medical advice**.
 
-### 🤖 **Agent Hooks & Automation**
-- **State Management**: Automated session persistence
-- **Persona Switching**: Dynamic advisor response generation
-- **Testing Workflows**: Automated performance monitoring
+---
 
-### 🎯 **Steering & Context**
-- **Advisor Prioritization**: Smart advisor selection logic
-- **YAML Integration**: Domain configuration management
-- **Response Templates**: Context-aware advice generation
+## 🚀 Headline Features
 
-## 🚀 **Quick Setup**
+- **Multi-Board Coordination** — Cross-domain answers synthesized to **Consensus / Tension / Decision**.
+- **Persona Lenses** — Bespoke prompts for key Product personas + **board + seniority** fallbacks for everyone else.
+- **Server-Side LLM** — `/.netlify/functions/llm` proxies OpenAI using `OPENAI_API_KEY` from the server.
+- **A11y & Perf** — Focus rings, prefers-reduced-motion, CLS < 0.02, LCP targets, lazy images.
+- **Analytics Hooks** — `hero_demo_submit`, `advisor_response_render`, `summary_render`, `persona_chat_click`.
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+---
 
-### 2. Configure LLM Integration (Optional)
-Create `.env.local` file for AI-powered responses:
-```bash
-# Copy the example file
-cp .env.local.example .env.local
+## 🛠 Built with Kiro — What We Actually Used (and Why It Matters)
 
-# Add your OpenAI API key
-VITE_OPENAI_API_KEY=your_openai_api_key_here
-VITE_LLM_MODEL=gpt-4o-mini
-```
+Kiro powered **spec-to-code**, vibe-guided UI polish, and prompt steering that kept us fast and consistent.
 
-### 3. Start Development Server
-```bash
-npm run dev
-```
+### 📋 Spec-Driven Development (spec-to-code)
+- **Living Specs → UI & Services**: Kiro specs scaffolded **Vite + React + TS + Tailwind** and core services.
+- **Acceptance Criteria → Tests**: Specs fed unit/integration/a11y tests so UI shipped with guardrails.
+- **Change Discipline**: We edit specs first, then generate/update stubs and wiring.
 
-### 4. Test the Application
-- Visit `http://localhost:5173`
-- Select a domain (e.g., RemediBoard for wellness)
-- Ask: "Which is better for diabetic patients, white rice or millets?"
-- Get expert AI responses or fallback to curated content
+**Outcome:** predictable delivery, consistent patterns, fewer regressions.
 
-## 🎥 **Demo**
+### 🤖 Agent Hooks & Automation
+- **Build/Deploy Hooks**: Typecheck/tests preflight; prod-safe build.
+- **Persona Safety Hooks**: “Prompt linting” enforces verdict-first format, ≤12-word bullets, and domain disclaimers.
+- **DX Quality Hooks**: Auto-insert premium micro-interactions & a11y focus-rings to avoid drift.
 
-[🎬 Watch 3-Minute Demo Video](https://youtube.com/watch?v=demo-link)
+**Outcome:** fewer “oops” moments; consistent outputs across personas and screens.
 
-### Quick Start Demo Flow:
-1. **Select Domain** → Choose Clinical Research & Regulatory
-2. **Assemble Panel** → Pick Dr. Sarah Chen & Dr. Michael Rodriguez  
-3. **Ask Question** → "How long should I wait before reporting a serious adverse event?"
-4. **Get Expert Advice** → Receive specialized guidance in seconds
-5. **Download Report** → Professional PDF with branded consultation summary
+### 🎯 Steering & Context (vibes + prompts)
+- **Persona Lenses**: Bespoke lenses for CPO/PM; **board + seniority** fallbacks for all other personas.
+- **Domain Guardrails**: Clinical/Wellness answers include **educational-only** disclaimers and avoid diagnostic claims.
+- **Format Contracts**: All answers follow the same structure (e.g., **Verdict → Why Now → 2-Week Plan → Risks/Mitigations**) for scannable, executive-ready results.
+
+**Outcome:** crisp, comparable responses that read like real advisory notes.
+
+### 🧩 Where to Look in the Repo
+- `/.kiro/` — specs, hooks, steering (**required for judging; intentionally included**)
+- `src/services/prompt/personaLenses.ts` — persona + fallback prompt generator
+- `netlify/functions/llm.ts` — server-side OpenAI proxy (no client secrets)
+- `public/_headers` — forces UTF-8 so emojis render correctly across CDNs
+
+---
 
 ## 🏗 **Technical Architecture**
 
 ```
 advisor-board-app/
-├── .kiro/                    # Kiro configuration
-│   ├── specs/               # Requirements, design, tasks
-│   ├── hooks/               # Agent automation
-│   └── steering/            # Context management
-├── src/
-│   ├── components/          # React components
-│   ├── services/            # Business logic
-│   ├── types/               # TypeScript definitions
-│   └── utils/               # Helper functions
-├── public/
-│   └── configs/             # YAML domain configurations
-└── docs/                    # Comprehensive documentation
+├─ .kiro/ # Kiro specs/hooks/steering (REQUIRED for judging)
+├─ netlify/
+│ └─ functions/
+│ └─ llm.ts # Serverless proxy to OpenAI (reads env OPENAI_API_KEY)
+├─ public/
+│ └─ _headers # Forces UTF-8 (fixes emoji/character issues)
+├─ src/
+│ ├─ components/ # React UI
+│ ├─ services/
+│ │ ├─ intelligentResponseService.ts
+│ │ ├─ prompt/
+│ │ │ └─ personaLenses.ts # Persona + fallback prompt generator
+│ │ └─ llm/ # Provider layer + config
+│ ├─ data/ # Curated static demo content
+│ └─ shims/
+│ └─ llm-proxy-shim.ts # Reroutes browser OpenAI calls → Netlify function
+└─ netlify.toml # Build + SPA redirects + functions path
 ```
+
+**Why this matters:** The browser never holds real keys. All LLM traffic flows through the function.
+
+---
+
+## ⚙️ Setup & Run
+
+> **Tip:** Local LLM calls only work when you run **Netlify Dev** (because it hosts functions).
+
+### 1) Install
+```bash
+npm ci
 
 ### 🔧 **Tech Stack**
 - **Frontend**: React 19 + TypeScript + Tailwind CSS
