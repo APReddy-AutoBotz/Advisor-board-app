@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Custom error classes for YAML configuration loading
  */
 

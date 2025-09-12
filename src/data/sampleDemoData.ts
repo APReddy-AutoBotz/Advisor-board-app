@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Static demo data for premium landing transformation
  * Provides hardcoded advisor responses and demo scenarios for visual simulation
  */

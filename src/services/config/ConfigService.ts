@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Configuration Service
  * Provides centralized access to configuration and feature flags
  */

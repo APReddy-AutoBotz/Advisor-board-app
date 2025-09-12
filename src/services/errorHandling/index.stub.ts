@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Temporary Error Handling Stub
  * Minimal exports to prevent import errors
  */

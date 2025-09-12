@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Static Advisor Response Card Tests
  */
 

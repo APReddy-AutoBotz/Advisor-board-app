@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Multi-Board Demo Component
  * Premium display-first experience for multi-board consultations
  * Uses static demo data for immediate, impressive results
@@ -88,7 +88,7 @@ const MultiBoardDemo: React.FC<MultiBoardDemoProps> = ({
               onClick={onBack}
               className="flex items-center gap-2"
             >
-              ← Back
+              â† Back
             </Button>
           )}
           <h1 className="type-h1">

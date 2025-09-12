@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Enhanced Configuration Manager
  * Handles environment configuration, feature flags, validation, and hot-reloading
  */

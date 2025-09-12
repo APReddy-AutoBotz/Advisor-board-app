@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Comprehensive Error Type Definitions
  * Defines all error types and handling strategies for the persona-LLM integration system
  * 

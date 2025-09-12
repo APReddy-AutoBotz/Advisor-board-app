@@ -1,4 +1,4 @@
-/**
+﻿/**
  * DemoInput Component Tests
  * Tests for interactive demo input with skeleton loading states
  */

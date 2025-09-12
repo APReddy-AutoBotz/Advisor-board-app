@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Static Multi-Board Response Service (Hardened)
  * - Never throws on unknown board IDs
  * - Normalizes IDs: clini/clinical/cliniBoard -> cliniboard, etc.
@@ -168,7 +168,7 @@ export async function generateStaticMultiBoardResponses(
       boardName: bname,
       responses: advisorOutputs,
       timestamp: new Date(),
-      coordinationContext: String(chosen?.title ?? `${bname} — Strategy`),
+      coordinationContext: String(chosen?.title ?? `${bname} â€” Strategy`),
     });
   }
 
@@ -196,7 +196,7 @@ export async function generateStaticMultiBoardResponses(
         boardName: title,
         responses: advisorOutputs,
         timestamp: now,
-        coordinationContext: `${title} — Advisory`,
+        coordinationContext: `${title} â€” Advisory`,
       });
       totalExperts += advisorOutputs.length;
       present.add(id);
@@ -252,7 +252,7 @@ function buildFallbackFromBoards(boards: Board[], question: string): StaticMulti
       boardName: board.title,
       responses: advisorOutputs,
       timestamp: now,
-      coordinationContext: `${board.title} — Advisory`,
+      coordinationContext: `${board.title} â€” Advisory`,
     };
   });
 
@@ -287,10 +287,10 @@ function synthContent(advisorName: string, advisorRole: string, boardTitle: stri
     // CPO / Head of Product: strategy lens
     if (role.includes('chief') || role.includes('head of product') || role === 'cpo') {
       return `**Verdict:** Commit to one killer demo path and GTM story.
-- Define 1–2 hero moments tied to value
+- Define 1â€“2 hero moments tied to value
 - Ruthlessly defer non-critical asks to v0.2
 - Craft pricing/tiers early; validate willingness to pay
-- Instrument activation → habit loop → retention
+- Instrument activation â†’ habit loop â†’ retention
 - Staff POD: PM + FE + BE + Design; timebox 12 weeks`;
     }
 
@@ -318,7 +318,7 @@ function synthContent(advisorName: string, advisorRole: string, boardTitle: stri
     if (role.includes('data') || role.includes('analytics')) {
       return `**Verdict:** Measure the loop that matters.
 - Define north-star + 3 guardrail metrics
-- Event schema: hero_demo_submit → conversion
+- Event schema: hero_demo_submit â†’ conversion
 - Add cohorting by CGM usage and coach touch
 - Build a minimal KPI dashboard for judges
 - Annotate releases; run A/B only if stable`;
@@ -337,13 +337,13 @@ function synthContent(advisorName: string, advisorRole: string, boardTitle: stri
     // Default product fallback
     return `**Verdict:** Demo-first MVP; kill scope creep.
 - Freeze the happy-path flow
-- Add 1–2 wow moments only
+- Add 1â€“2 wow moments only
 - Instrument LCP and conversion
 - Ship feature flags for risky bits
 - Collect judge feedback in-app`;
   }
   if (id.includes('edu')) {
-    return `**Verdict:** Explain like I’m 12, then stretch.
+    return `**Verdict:** Explain like Iâ€™m 12, then stretch.
 - Use example-first teaching
 - Add recall checks and hints
 - Provide printable take-home tasks
@@ -376,13 +376,13 @@ function defaultSynthesisText(boardIds: CanonicalId[], question: string): string
 
   return [
     '## Cross-Board Synthesis',
-    `*Coordinating: ${lanes.join(' • ')}*`,
+    `*Coordinating: ${lanes.join(' â€¢ ')}*`,
     '',
     '**Verdict:** Demo-first path looks viable with guardrails.',
     '- Lock scope; prefer reliability over breadth',
     '- Show disclaimers for clinical/wellness content',
     '- Add analytics: hero_demo_submit, advisor_response_render',
-    '- Optimize LCP ≤ 2.5s; CLS < 0.02',
+    '- Optimize LCP â‰¤ 2.5s; CLS < 0.02',
     '- Capture judge feedback in-product',
   ].join('\n');
 }

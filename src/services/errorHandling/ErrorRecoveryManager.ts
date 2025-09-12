@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Error Recovery Manager
  * Coordinates error handling, retry logic, and recovery strategies
  * 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Simple Animation Observer Hook
  * Provides basic entrance animations without complex intersection observer
  */

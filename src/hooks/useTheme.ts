@@ -1,4 +1,4 @@
-// useContext import removed as it's not used
+﻿// useContext import removed as it's not used
 import { useTheme as useThemeContext } from '../components/common/ThemeProvider';
 import type { DomainId } from '../types';
 

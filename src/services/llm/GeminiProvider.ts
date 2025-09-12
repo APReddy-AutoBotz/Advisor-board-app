@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Gemini Provider Implementation
  * Handles Google Gemini API integration with proper error handling and retry logic
  */

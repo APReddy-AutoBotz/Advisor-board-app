@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import type { Advisor } from '../../types/domain';
 
 interface AdvisorAvatarProps {

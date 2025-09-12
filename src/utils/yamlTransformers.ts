@@ -1,4 +1,4 @@
-import type { DomainSpec, Advisor, Domain, DomainId, UseCase } from '../types';
+﻿import type { DomainSpec, Advisor, Domain, DomainId, UseCase } from '../types';
 
 /**
  * Transform raw YAML advisor data into typed Advisor objects

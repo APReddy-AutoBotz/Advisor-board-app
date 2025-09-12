@@ -1,4 +1,4 @@
-import type { Advisor, AdvisorResponse, DomainId } from './domain';
+﻿import type { Advisor, AdvisorResponse, DomainId } from './domain';
 import type { Board } from '../lib/boards';
 
 export interface ConsultationSession {

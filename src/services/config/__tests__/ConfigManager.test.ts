@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ConfigManager Tests
  * Tests for configuration management functionality
  */

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Error Handling Strategies Configuration
  * Defines specific handling strategies for different error types
  * 

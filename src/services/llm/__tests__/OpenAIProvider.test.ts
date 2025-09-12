@@ -1,4 +1,4 @@
-/**
+﻿/**
  * OpenAI Provider Tests
  * Test suite for OpenAI API integration
  */
@@ -248,7 +248,7 @@ describe('OpenAIProvider', () => {
       const fetchCall = (global.fetch as any).mock.calls[0];
       const [url, options] = fetchCall;
 
-      expect(url).toBe('https://api.openai.com/v1/chat/completions');
+      expect(url).toBe('/.netlify/functions/llm');
       expect(options.method).toBe('POST');
       expect(options.headers['Authorization']).toBe('Bearer test-api-key');
       expect(options.headers['Content-Type']).toBe('application/json');

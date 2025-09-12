@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Content Sanitizer Utility
  * 
  * Replaces real company names, valuations, and specific metrics with generic terms

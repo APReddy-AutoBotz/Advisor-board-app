@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Static Demo Results Component
  * 
  * Orchestrates the display of advisor response cards and summary

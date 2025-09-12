@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import type { Advisor, AdvisorResponse, DomainId } from '../../types/domain';
 import ResponseThread from './ResponseThread';
 import Card from '../common/Card';

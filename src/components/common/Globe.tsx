@@ -1,4 +1,4 @@
-
+﻿
 import { extractFirstName } from '../../utils/nameUtils';
 
 interface AdvisorBubble {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+﻿import { useState, useCallback, useEffect } from 'react';
 import type { Advisor, AdvisorResponse } from '../types/domain';
 import type { ConsultationSession } from '../types/session';
 import type { Board } from '../lib/boards';

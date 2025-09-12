@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Fallback Manager Tests
  * Tests for fallback mechanisms and cache management
  */

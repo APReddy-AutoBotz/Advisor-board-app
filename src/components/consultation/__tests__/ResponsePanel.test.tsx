@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import ResponsePanel from '../ResponsePanel';
@@ -377,7 +377,7 @@ describe('ResponsePanel', () => {
         button.textContent?.includes('Dr. Sarah Chen')
       );
       expect(tabButtons.length).toBeGreaterThan(0);
-      expect(tabButtons[0]).toHaveTextContent('●');
+      expect(tabButtons[0]).toHaveTextContent('â—');
     });
   });
 

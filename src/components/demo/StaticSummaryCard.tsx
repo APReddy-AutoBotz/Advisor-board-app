@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Static Summary Card Component
  * 
  * Displays synthesized topline summary after advisor responses
@@ -88,7 +88,7 @@ export const StaticSummaryCard: React.FC<StaticSummaryCardProps> = ({
       <div className="mt-4 pt-3 border-t border-gray-100">
         <div className="flex items-center justify-between">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-            ✨ AI-Generated Summary
+            âœ¨ AI-Generated Summary
           </span>
           
           <div className="text-xs text-gray-500">

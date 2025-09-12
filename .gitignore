@@ -37,3 +37,14 @@ dist/
 .cache/
 .DS_Store
 Thumbs.db
+
+# ----- hackathon-safe ignores -----
+.env
+.env.*.local
+.env.local
+dist/
+node_modules/
+# backup files
+*.bak
+# NEVER ignore the Kiro folder
+!/.kiro/

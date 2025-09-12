@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useMemo } from 'react';
+﻿import { useState, useCallback, useRef, useMemo } from 'react';
 import type { Advisor, AdvisorResponse } from '../types/domain';
 import { advisorService, AdvisorServiceError } from '../services/advisorService';
 import { useAsyncPerformanceMonitoring } from './usePerformanceMonitoring';

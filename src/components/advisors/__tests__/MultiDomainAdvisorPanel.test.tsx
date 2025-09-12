@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+﻿import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import MultiDomainAdvisorPanel from '../MultiDomainAdvisorPanel';
 import { yamlConfigLoader } from '../../../services';

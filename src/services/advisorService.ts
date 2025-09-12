@@ -1,4 +1,4 @@
-import type { Advisor, AdvisorResponse, PersonaConfig } from '../types/domain';
+﻿import type { Advisor, AdvisorResponse, PersonaConfig } from '../types/domain';
 import { yamlConfigLoader } from './yamlConfigLoader';
 
 export interface AdvisorServiceConfig {

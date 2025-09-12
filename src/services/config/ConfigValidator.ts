@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Configuration Validator
  * Provides comprehensive validation for configuration and environment settings
  */

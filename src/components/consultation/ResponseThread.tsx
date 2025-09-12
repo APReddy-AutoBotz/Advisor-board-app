@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import type { Advisor, AdvisorResponse } from '../../types/domain';
 import Card from '../common/Card';
 import AdvisorAvatar from '../advisors/AdvisorAvatar';
@@ -84,7 +84,7 @@ const ResponseThread: React.FC<ResponseThreadProps> = ({
             Response from {advisor.domain?.name || 'Advisory Board'}
             {response.persona && (
               <span className="ml-2 text-neutral-400">
-                • {response.persona.tone}
+                â€¢ {response.persona.tone}
               </span>
             )}
           </span>
